@@ -47,7 +47,7 @@
   <ItemGroup>
     <Compile Include="Advanced.cs" />
     <Compile Include="Beginner.cs" />
-    <Compile Include="Board.cs" />
+    <Compile Include="GameBoard.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
