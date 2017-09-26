@@ -82,6 +82,20 @@ namespace CS4750HW4
             return returnVal;
         } //End private bool isValidSpace(Point tileToConsider, BoardVals valToConsider)
 
+        public bool setState(Point tileToConsider, BoardVals valToBePlaced)
+        {
+            //Declare variables
+            bool returnVal = false;
+
+            if (isValidSpace(tileToConsider, BoardVals.NULL))
+            {
+                this.Board[tileToConsider.X, tileToConsider.Y] = valToBePlaced;
+                returnVal = true;
+            } //End if (isValidSpace(tileToConsider, BoardVals.NULL))
+
+            return returnVal;
+        } //End public bool setState(Point tileToConsider, BoardVals valToBePlaced)
+
         public List<Point> getPossibleMoves()
         {
             //Declare variables
