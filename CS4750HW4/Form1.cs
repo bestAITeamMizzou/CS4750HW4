@@ -10,10 +10,18 @@ using System.Windows.Forms;
 
 namespace CS4750HW4
 {
+    public enum BoardVals
+    {
+        NULL = -1,
+        O = 0,
+        X = 1
+    } //End public enum BoardVals
+
     public partial class Form1 : Form
     {
         /***************ATTRIBUTES***************/
         //Fields
+
 
         //Properties
 
