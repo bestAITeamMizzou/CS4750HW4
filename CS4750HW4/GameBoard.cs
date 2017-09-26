@@ -39,18 +39,7 @@ namespace CS4750HW4
 
         public BoardVals[,] getGameBoard()
         {
-            //Declare variables
-            BoardVals[,] boardCopy = new BoardVals[5, 6];
-
-            for (int j = 0; j < 6; j++)
-            {
-                for (int i = 0; i < 5; i++)
-                {
-                    boardCopy[i,j] = this.Board[i, j];
-                } //End for (int i = 0; i < 5; i++)
-            } //End for (int j = 0; j < 6; j++)
-
-            return boardCopy;
+            return (BoardVals[,])this.Board.Clone();
         } //End public BoardVals[,] getGameBoard()
 
         private bool isValidSpace(Point tile)
@@ -58,10 +47,10 @@ namespace CS4750HW4
             //Declare variables
             bool returnVal = false;
 
-            if ((tile.X >= 0 && tile.X < 5) && (tile.Y >= 0 && tile.Y < 6))
+            if ((tile.X >= 0 && tile.X < board.GetLength(0)) && (tile.Y >= 0 && tile.Y < board.GetLength(1)))
             {
                 returnVal = true;
-            } //End if ((tile.X >= 0 && tile.X < 5) && (tile.Y >= 0 && tile.Y < 6))
+            } //End if ((tile.X >= 0 && tile.X < board.GetLength(0)) && (tile.Y >= 0 && tile.Y < board.GetLength(1)))
 
             return returnVal;
         } //End private bool isValidSpace(Point tile)
@@ -298,6 +287,18 @@ namespace CS4750HW4
 
             return threes;
         } //End public List<List<Point>> getThreesInARow(BoardVals valToConsider)
+
+        public int heurisic(Boolean isX)
+        {
+            Boolean[,] colorBoard = new Boolean[board.GetLength(0), board.GetLength(1)];//data structure for not marking subsections pof 2 in a rows 
+
+            return isX ? 
+                //heuristic for X
+                getThreesInARow(BoardVals.X).Count * 3 - getThreesInARow(BoardVals.O) * 3 + getTwosInARow(BoardVals.X).Count - getTwosInARow(BoardVals.O).Count
+            :
+                //heuristic for O
+                getThreesInARow(BoardVals.O).Count * 3 - getThreesInARow(BoardVals.X) * 3 + getTwosInARow(BoardVals.O).Count - getTwosInARow(BoardVals.X).Count;
+        }
 
         private BoardDirection determineDirectionT1ToT2(Point tile1, Point tile2)
         {
