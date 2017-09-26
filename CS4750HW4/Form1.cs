@@ -42,11 +42,34 @@ namespace CS4750HW4
         public Form1()
         {
             InitializeComponent();
-        } //End public Form1()
+        } //End public Form1
 
         /***************METHODS***************/
 
         /***************EVENTS***************/
+        private void btnPlace_Click(object sender, EventArgs e)
+        {
 
+        } //End private void btnPlace_Click(object sender, EventArgs e)
+
+        private void btnBeginner_Click(object sender, EventArgs e)
+        {
+
+        } //End private void btnBeginner_Click(object sender, EventArgs e)
+
+        private void btnAdvanced_Click(object sender, EventArgs e)
+        {
+
+        } //End private void btnAdvanced_Click(object sender, EventArgs e)
+
+        private void btnMaster_Click(object sender, EventArgs e)
+        {
+
+        } //End private void btnMaster_Click(object sender, EventArgs e)
+
+        private void btnTournament_Click(object sender, EventArgs e)
+        {
+
+        } //End private void btnTournament_Click(object sender, EventArgs e)
     } //End public partial class Form1 : Form
 } //End namespace CS4750HW4

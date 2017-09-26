@@ -81,7 +81,12 @@ namespace CS4750HW4
 
             return returnVal;
         } //End private bool isValidSpace(Point tileToConsider, BoardVals valToConsider)
-
+        /// <summary>
+        /// Places the given value in a tile if it's empty
+        /// </summary>
+        /// <param name="tileToConsider"></param>
+        /// <param name="valToBePlaced"></param>
+        /// <returns></returns>
         public bool setState(Point tileToConsider, BoardVals valToBePlaced)
         {
             //Declare variables
@@ -95,7 +100,10 @@ namespace CS4750HW4
 
             return returnVal;
         } //End public bool setState(Point tileToConsider, BoardVals valToBePlaced)
-
+        /// <summary>
+        /// Gets all the possible moves, ie. all the empty spaces
+        /// </summary>
+        /// <returns></returns>
         public List<Point> getPossibleMoves()
         {
             //Declare variables
@@ -114,7 +122,12 @@ namespace CS4750HW4
 
             return possibleMoves;
         } //End public List<Point> getPossibleMoves()
-
+        /// <summary>
+        /// Gets all the possible surrounding tiles that are the same as the one considering
+        /// </summary>
+        /// <param name="tileToConsider"></param>
+        /// <param name="valToConsider"></param>
+        /// <returns>A list of the valid tiles found</returns>
         private List<Point> getValidSurroundingTiles(Point tileToConsider, BoardVals valToConsider)
         {
             //Declare variables
@@ -170,7 +183,13 @@ namespace CS4750HW4
 
             return validTiles;
         } //End private List<Point> getValidSurroundingTiles(Point tileToConsider, BoardVals valToConsider)
-
+        /// <summary>
+        /// Gets the next tile in a row based on the tile and direction given
+        /// </summary>
+        /// <param name="tileToConsider"></param>
+        /// <param name="valToConsider"></param>
+        /// <param name="direction"></param>
+        /// <returns>Returns the next tile if valid, otherwise it returns Point(-1,-1) (ie. an invalid tile)</returns>
         private Point getPossibleNthInARow(Point tileToConsider, BoardVals valToConsider, BoardDirection direction)
         {
             //Declare variables
@@ -232,7 +251,11 @@ namespace CS4750HW4
 
             return validTile;
         } //End private Point getPossibleNthInARow(Point tileToConsider, BoardVals valToConsider, BoardDirection direction)
-
+        /// <summary>
+        /// Finds 2 tiles in the same direction with an empty space at one end
+        /// </summary>
+        /// <param name="valToConsider">Look at Xs or Os</param>
+        /// <returns></returns>
         public List<List<Point>> getTwosInARow(BoardVals valToConsider)
         {
             //Declare variables
@@ -275,7 +298,11 @@ namespace CS4750HW4
 
             return twos;
         } //End public List<List<Point>> getTwosInARow(BoardVals valToConsider)
-
+        /// <summary>
+        /// Finds 3 tiles all in the same direction with an empty space at one end
+        /// </summary>
+        /// <param name="valToConsider">Look at Xs or Os</param>
+        /// <returns></returns>
         public List<List<Point>> getThreesInARow(BoardVals valToConsider)
         {
             //Declare variables
@@ -325,7 +352,12 @@ namespace CS4750HW4
 
             return threes;
         } //End public List<List<Point>> getThreesInARow(BoardVals valToConsider)
-
+        /// <summary>
+        /// Determines the direction when going from tile1 to tile 2
+        /// </summary>
+        /// <param name="tile1"></param>
+        /// <param name="tile2"></param>
+        /// <returns></returns>
         private BoardDirection determineDirectionT1ToT2(Point tile1, Point tile2)
         {
             //Declare variables
