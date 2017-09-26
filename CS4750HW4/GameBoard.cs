@@ -11,7 +11,6 @@ namespace CS4750HW4
     {
         /***************ATTRIBUTES***************/
         //Fields
-        private BoardVals[,] board;
 
         //Properties
         private BoardVals[,] Board { get; set; }
@@ -24,23 +23,6 @@ namespace CS4750HW4
         } //End 
 
         /***************METHODS***************/
-        private void initGameBoard()
-        {
-            this.Board = new BoardVals[5, 6];
-
-            for (int j = 0; j < 6; j++)
-            {
-                for (int i = 0; i < 5; i++)
-                {
-                    this.Board[i, j] = BoardVals.NULL;
-                } //End for (int i = 0; i < 5; i++)
-            } //End for (int j = 0; j < 6; j++)
-        } //End private void initGameBoard()
-
-        public BoardVals[,] getGameBoard()
-        {
-            return (BoardVals[,])this.Board.Clone();
-        } //End public BoardVals[,] getGameBoard()
 
         private bool isValidSpace(Point tile)
         {
@@ -55,7 +37,7 @@ namespace CS4750HW4
             return returnVal;
         } //End private bool isValidSpace(Point tile)
 
-        private bool isValidSpace(Point tileToConsider, BoardVals valToConsider)
+        public bool isValidSpace(Point tileToConsider, BoardVals valToConsider)
         {
             //Declare variables
             bool returnVal = false;
@@ -69,8 +51,13 @@ namespace CS4750HW4
             } //End if ((tileToConsider.X >= 0 && tileToConsider.X < 5) && (tileToConsider.Y >= 0 && tileToConsider.Y < 6))
 
             return returnVal;
-        } //End private bool isValidSpace(Point tileToConsider, BoardVals valToConsider)
-
+        } //End public bool isValidSpace(Point tileToConsider, BoardVals valToConsider)
+        /// <summary>
+        /// Places the given value in a tile if it's empty
+        /// </summary>
+        /// <param name="tileToConsider"></param>
+        /// <param name="valToBePlaced"></param>
+        /// <returns></returns>
         public bool setState(Point tileToConsider, BoardVals valToBePlaced)
         {
             //Declare variables
@@ -84,7 +71,10 @@ namespace CS4750HW4
 
             return returnVal;
         } //End public bool setState(Point tileToConsider, BoardVals valToBePlaced)
-
+        /// <summary>
+        /// Gets all the possible moves, ie. all the empty spaces
+        /// </summary>
+        /// <returns></returns>
         public List<Point> getPossibleMoves()
         {
             //Declare variables
@@ -103,7 +93,12 @@ namespace CS4750HW4
 
             return possibleMoves;
         } //End public List<Point> getPossibleMoves()
-
+        /// <summary>
+        /// Gets all the possible surrounding tiles that are the same as the one considering
+        /// </summary>
+        /// <param name="tileToConsider"></param>
+        /// <param name="valToConsider"></param>
+        /// <returns>A list of the valid tiles found</returns>
         private List<Point> getValidSurroundingTiles(Point tileToConsider, BoardVals valToConsider)
         {
             //Declare variables
@@ -159,8 +154,14 @@ namespace CS4750HW4
 
             return validTiles;
         } //End private List<Point> getValidSurroundingTiles(Point tileToConsider, BoardVals valToConsider)
-
-        private Point getPossibleThirdInARow(Point tileToConsider, BoardVals valToConsider, BoardDirection direction)
+        /// <summary>
+        /// Gets the next tile in a row based on the tile and direction given
+        /// </summary>
+        /// <param name="tileToConsider"></param>
+        /// <param name="valToConsider"></param>
+        /// <param name="direction"></param>
+        /// <returns>Returns the next tile if valid, otherwise it returns Point(-1,-1) (ie. an invalid tile)</returns>
+        private Point getPossibleNthInARow(Point tileToConsider, BoardVals valToConsider, BoardDirection direction)
         {
             //Declare variables
             Point validTile = new Point (-1, -1);
@@ -220,13 +221,18 @@ namespace CS4750HW4
             } //End switch (direction)
 
             return validTile;
-        } //End private Point getPossibleThirdInARow(Point tileToConsider, BoardVals valToConsider, BoardDirection direction)
-
+        } //End private Point getPossibleNthInARow(Point tileToConsider, BoardVals valToConsider, BoardDirection direction)
+        /// <summary>
+        /// Finds 2 tiles in the same direction with an empty space at one end
+        /// </summary>
+        /// <param name="valToConsider">Look at Xs or Os</param>
+        /// <returns></returns>
         public List<List<Point>> getTwosInARow(BoardVals valToConsider)
         {
             //Declare variables
             List<List<Point>> twos = new List<List<Point>>();
             List<Point> possible2nds = new List<Point>();
+            Point empty3rd;
 
             for (int j = 0; j < 6; j++)
             {
@@ -239,10 +245,22 @@ namespace CS4750HW4
                         {
                             for (int x = 0; x < possible2nds.Count; x++)
                             {
+                                empty3rd = getPossibleNthInARow(possible2nds[x], BoardVals.NULL, determineDirectionT1ToT2(new Point(i, j), possible2nds[x]));
+                                if (isValidSpace(empty3rd, BoardVals.NULL))
+                                {
+                                    List<Point> temp = new List<Point>();
+                                    temp.Add(new Point(i, j));
+                                    temp.Add(possible2nds[x]);
+                                    temp.Add(empty3rd);
+                                    twos.Add(temp);
+                                } //End if (isValidSpace(empty3rd, valToConsider))
+
+                                /*
                                 List<Point> temp = new List<Point>();
                                 temp.Add(new Point(i, j));
                                 temp.Add(possible2nds[x]);
                                 twos.Add(temp);
+                                //*/
                             } //End for (int x = 0; x < possible2nds.Count; x++)
                         } //End if (possible2nds.Count > 0)
                     } //End if (this.Board[i,j] == valToConsider)
@@ -251,13 +269,18 @@ namespace CS4750HW4
 
             return twos;
         } //End public List<List<Point>> getTwosInARow(BoardVals valToConsider)
-
+        /// <summary>
+        /// Finds 3 tiles all in the same direction with an empty space at one end
+        /// </summary>
+        /// <param name="valToConsider">Look at Xs or Os</param>
+        /// <returns></returns>
         public List<List<Point>> getThreesInARow(BoardVals valToConsider)
         {
             //Declare variables
             List<List<Point>> threes = new List<List<Point>>();
             List<Point> possible2nds = new List<Point>();
             Point possible3rd;
+            Point empty4th;
 
             for (int j = 0; j < 6; j++)
             {
@@ -270,14 +293,27 @@ namespace CS4750HW4
                         {
                             for (int x = 0; x < possible2nds.Count; x++)
                             {
-                                possible3rd = getPossibleThirdInARow(possible2nds[x], valToConsider, determineDirectionT1ToT2(new Point(i, j), possible2nds[x]));
+                                possible3rd = getPossibleNthInARow(possible2nds[x], valToConsider, determineDirectionT1ToT2(new Point(i, j), possible2nds[x]));
                                 if (isValidSpace(possible3rd, valToConsider))
                                 {
+                                    empty4th = getPossibleNthInARow(possible3rd, BoardVals.NULL, determineDirectionT1ToT2(new Point(i, j), possible2nds[x]));
+                                    if (isValidSpace(empty4th, BoardVals.NULL))
+                                    {
+                                        List<Point> temp = new List<Point>();
+                                        temp.Add(new Point(i, j));
+                                        temp.Add(possible2nds[x]);
+                                        temp.Add(possible3rd);
+                                        temp.Add(empty4th);
+                                        threes.Add(temp);
+                                    } //End if (isValidSpace(empty4th, BoardVals.NULL))
+
+                                    /*
                                     List<Point> temp = new List<Point>();
                                     temp.Add(new Point(i, j));
                                     temp.Add(possible2nds[x]);
                                     temp.Add(possible3rd);
                                     threes.Add(temp);
+                                    //*/
                                 } //End if (isValidSpace(possible3rd, valToConsider))
                             } //End for (int x = 0; x < possible2nds.Count; x++)
                         } //End if (possible2nds.Count > 0)
@@ -299,7 +335,13 @@ namespace CS4750HW4
                 //heuristic for O
                 getThreesInARow(BoardVals.O).Count * 3 - getThreesInARow(BoardVals.X) * 3 + getTwosInARow(BoardVals.O).Count - getTwosInARow(BoardVals.X).Count;
         }
-
+        
+        /// <summary>
+        /// Determines the direction when going from tile1 to tile 2
+        /// </summary>
+        /// <param name="tile1"></param>
+        /// <param name="tile2"></param>
+        /// <returns></returns>
         private BoardDirection determineDirectionT1ToT2(Point tile1, Point tile2)
         {
             //Declare variables
@@ -356,6 +398,24 @@ namespace CS4750HW4
 
             return returnVal;
         } //End private BoardDirection determineDirectionT1ToT2(Point tile1, Point tile2)
+        private void initGameBoard()
+        {
+            this.Board = new BoardVals[5, 6];
+
+            for (int j = 0; j < 6; j++)
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    this.Board[i, j] = BoardVals.NULL;
+                } //End for (int i = 0; i < 5; i++)
+            } //End for (int j = 0; j < 6; j++)
+        } //End private void initGameBoard()
+
+        
+        public BoardVals[,] getGameBoard()
+        {
+            return (BoardVals[,])this.Board.Clone();
+        } //End public BoardVals[,] getGameBoard()
 
     } //End class Board
 } //End namespace CS4750HW4
