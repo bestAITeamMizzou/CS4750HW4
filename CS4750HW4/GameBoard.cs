@@ -171,7 +171,7 @@ namespace CS4750HW4
             return validTiles;
         } //End private List<Point> getValidSurroundingTiles(Point tileToConsider, BoardVals valToConsider)
 
-        private Point getPossibleThirdInARow(Point tileToConsider, BoardVals valToConsider, BoardDirection direction)
+        private Point getPossibleNthInARow(Point tileToConsider, BoardVals valToConsider, BoardDirection direction)
         {
             //Declare variables
             Point validTile = new Point (-1, -1);
@@ -231,13 +231,14 @@ namespace CS4750HW4
             } //End switch (direction)
 
             return validTile;
-        } //End private Point getPossibleThirdInARow(Point tileToConsider, BoardVals valToConsider, BoardDirection direction)
+        } //End private Point getPossibleNthInARow(Point tileToConsider, BoardVals valToConsider, BoardDirection direction)
 
         public List<List<Point>> getTwosInARow(BoardVals valToConsider)
         {
             //Declare variables
             List<List<Point>> twos = new List<List<Point>>();
             List<Point> possible2nds = new List<Point>();
+            Point empty3rd;
 
             for (int j = 0; j < 6; j++)
             {
@@ -250,10 +251,22 @@ namespace CS4750HW4
                         {
                             for (int x = 0; x < possible2nds.Count; x++)
                             {
+                                empty3rd = getPossibleNthInARow(possible2nds[x], BoardVals.NULL, determineDirectionT1ToT2(new Point(i, j), possible2nds[x]));
+                                if (isValidSpace(empty3rd, BoardVals.NULL))
+                                {
+                                    List<Point> temp = new List<Point>();
+                                    temp.Add(new Point(i, j));
+                                    temp.Add(possible2nds[x]);
+                                    temp.Add(empty3rd);
+                                    twos.Add(temp);
+                                } //End if (isValidSpace(empty3rd, valToConsider))
+
+                                /*
                                 List<Point> temp = new List<Point>();
                                 temp.Add(new Point(i, j));
                                 temp.Add(possible2nds[x]);
                                 twos.Add(temp);
+                                //*/
                             } //End for (int x = 0; x < possible2nds.Count; x++)
                         } //End if (possible2nds.Count > 0)
                     } //End if (this.Board[i,j] == valToConsider)
@@ -269,6 +282,7 @@ namespace CS4750HW4
             List<List<Point>> threes = new List<List<Point>>();
             List<Point> possible2nds = new List<Point>();
             Point possible3rd;
+            Point empty4th;
 
             for (int j = 0; j < 6; j++)
             {
@@ -281,14 +295,27 @@ namespace CS4750HW4
                         {
                             for (int x = 0; x < possible2nds.Count; x++)
                             {
-                                possible3rd = getPossibleThirdInARow(possible2nds[x], valToConsider, determineDirectionT1ToT2(new Point(i, j), possible2nds[x]));
+                                possible3rd = getPossibleNthInARow(possible2nds[x], valToConsider, determineDirectionT1ToT2(new Point(i, j), possible2nds[x]));
                                 if (isValidSpace(possible3rd, valToConsider))
                                 {
+                                    empty4th = getPossibleNthInARow(possible3rd, BoardVals.NULL, determineDirectionT1ToT2(new Point(i, j), possible2nds[x]));
+                                    if (isValidSpace(empty4th, BoardVals.NULL))
+                                    {
+                                        List<Point> temp = new List<Point>();
+                                        temp.Add(new Point(i, j));
+                                        temp.Add(possible2nds[x]);
+                                        temp.Add(possible3rd);
+                                        temp.Add(empty4th);
+                                        threes.Add(temp);
+                                    } //End if (isValidSpace(empty4th, BoardVals.NULL))
+
+                                    /*
                                     List<Point> temp = new List<Point>();
                                     temp.Add(new Point(i, j));
                                     temp.Add(possible2nds[x]);
                                     temp.Add(possible3rd);
                                     threes.Add(temp);
+                                    //*/
                                 } //End if (isValidSpace(possible3rd, valToConsider))
                             } //End for (int x = 0; x < possible2nds.Count; x++)
                         } //End if (possible2nds.Count > 0)
