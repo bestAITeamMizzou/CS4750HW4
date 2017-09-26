@@ -11,7 +11,6 @@ namespace CS4750HW4
     {
         /***************ATTRIBUTES***************/
         //Fields
-        private BoardVals[,] board;
 
         //Properties
         private BoardVals[,] Board { get; set; }
@@ -24,35 +23,6 @@ namespace CS4750HW4
         } //End 
 
         /***************METHODS***************/
-        private void initGameBoard()
-        {
-            this.Board = new BoardVals[5, 6];
-
-            for (int j = 0; j < 6; j++)
-            {
-                for (int i = 0; i < 5; i++)
-                {
-                    this.Board[i, j] = BoardVals.NULL;
-                } //End for (int i = 0; i < 5; i++)
-            } //End for (int j = 0; j < 6; j++)
-        } //End private void initGameBoard()
-
-        public BoardVals[,] getGameBoard()
-        {
-            //Declare variables
-            BoardVals[,] boardCopy = new BoardVals[5, 6];
-
-            for (int j = 0; j < 6; j++)
-            {
-                for (int i = 0; i < 5; i++)
-                {
-                    boardCopy[i,j] = this.Board[i, j];
-                } //End for (int i = 0; i < 5; i++)
-            } //End for (int j = 0; j < 6; j++)
-
-            return boardCopy;
-        } //End public BoardVals[,] getGameBoard()
-
         private bool isValidSpace(Point tile)
         {
             //Declare variables
@@ -66,7 +36,7 @@ namespace CS4750HW4
             return returnVal;
         } //End private bool isValidSpace(Point tile)
 
-        private bool isValidSpace(Point tileToConsider, BoardVals valToConsider)
+        public bool isValidSpace(Point tileToConsider, BoardVals valToConsider)
         {
             //Declare variables
             bool returnVal = false;
@@ -80,7 +50,7 @@ namespace CS4750HW4
             } //End if ((tileToConsider.X >= 0 && tileToConsider.X < 5) && (tileToConsider.Y >= 0 && tileToConsider.Y < 6))
 
             return returnVal;
-        } //End private bool isValidSpace(Point tileToConsider, BoardVals valToConsider)
+        } //End public bool isValidSpace(Point tileToConsider, BoardVals valToConsider)
         /// <summary>
         /// Places the given value in a tile if it's empty
         /// </summary>
@@ -414,6 +384,34 @@ namespace CS4750HW4
 
             return returnVal;
         } //End private BoardDirection determineDirectionT1ToT2(Point tile1, Point tile2)
+        private void initGameBoard()
+        {
+            this.Board = new BoardVals[5, 6];
+
+            for (int j = 0; j < 6; j++)
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    this.Board[i, j] = BoardVals.NULL;
+                } //End for (int i = 0; i < 5; i++)
+            } //End for (int j = 0; j < 6; j++)
+        } //End private void initGameBoard()
+
+        public BoardVals[,] getGameBoard()
+        {
+            //Declare variables
+            BoardVals[,] boardCopy = new BoardVals[5, 6];
+
+            for (int j = 0; j < 6; j++)
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    boardCopy[i, j] = this.Board[i, j];
+                } //End for (int i = 0; i < 5; i++)
+            } //End for (int j = 0; j < 6; j++)
+
+            return boardCopy;
+        } //End public BoardVals[,] getGameBoard()
 
     } //End class Board
 } //End namespace CS4750HW4

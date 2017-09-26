@@ -33,8 +33,8 @@
             this.btnMaster = new System.Windows.Forms.Button();
             this.btnTournament = new System.Windows.Forms.Button();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.cmbRow = new System.Windows.Forms.ComboBox();
+            this.cmbColumn = new System.Windows.Forms.ComboBox();
             this.lblRow = new System.Windows.Forms.Label();
             this.lblColumn = new System.Windows.Forms.Label();
             this.btnPlace = new System.Windows.Forms.Button();
@@ -84,40 +84,41 @@
             // 
             this.richTextBox1.Location = new System.Drawing.Point(93, 12);
             this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ReadOnly = true;
             this.richTextBox1.Size = new System.Drawing.Size(293, 440);
             this.richTextBox1.TabIndex = 4;
             this.richTextBox1.Text = "";
             // 
-            // comboBox1
+            // cmbRow
             // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
+            this.cmbRow.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbRow.FormattingEnabled = true;
+            this.cmbRow.Items.AddRange(new object[] {
             "0",
             "1",
             "2",
             "3",
             "4"});
-            this.comboBox1.Location = new System.Drawing.Point(12, 25);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(75, 21);
-            this.comboBox1.TabIndex = 5;
+            this.cmbRow.Location = new System.Drawing.Point(12, 25);
+            this.cmbRow.Name = "cmbRow";
+            this.cmbRow.Size = new System.Drawing.Size(75, 21);
+            this.cmbRow.TabIndex = 5;
             // 
-            // comboBox2
+            // cmbColumn
             // 
-            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Items.AddRange(new object[] {
+            this.cmbColumn.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbColumn.FormattingEnabled = true;
+            this.cmbColumn.Items.AddRange(new object[] {
             "0",
             "1",
             "2",
             "3",
             "4",
             "5"});
-            this.comboBox2.Location = new System.Drawing.Point(12, 65);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(75, 21);
-            this.comboBox2.TabIndex = 6;
+            this.cmbColumn.Location = new System.Drawing.Point(12, 65);
+            this.cmbColumn.Name = "cmbColumn";
+            this.cmbColumn.Size = new System.Drawing.Size(75, 21);
+            this.cmbColumn.TabIndex = 6;
             // 
             // lblRow
             // 
@@ -155,8 +156,8 @@
             this.Controls.Add(this.btnPlace);
             this.Controls.Add(this.lblColumn);
             this.Controls.Add(this.lblRow);
-            this.Controls.Add(this.comboBox2);
-            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.cmbColumn);
+            this.Controls.Add(this.cmbRow);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.btnTournament);
             this.Controls.Add(this.btnMaster);
@@ -176,8 +177,8 @@
         private System.Windows.Forms.Button btnMaster;
         private System.Windows.Forms.Button btnTournament;
         private System.Windows.Forms.RichTextBox richTextBox1;
-        private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.ComboBox cmbRow;
+        private System.Windows.Forms.ComboBox cmbColumn;
         private System.Windows.Forms.Label lblRow;
         private System.Windows.Forms.Label lblColumn;
         private System.Windows.Forms.Button btnPlace;

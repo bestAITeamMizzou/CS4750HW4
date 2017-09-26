@@ -42,9 +42,16 @@ namespace CS4750HW4
         public Form1()
         {
             InitializeComponent();
+            this.cmbRow.SelectedIndex = 0;
+            this.cmbColumn.SelectedIndex = 0;
         } //End public Form1
 
         /***************METHODS***************/
+        public void displayData(string data)
+        {
+
+        } //End 
+
 
         /***************EVENTS***************/
         private void btnPlace_Click(object sender, EventArgs e)
