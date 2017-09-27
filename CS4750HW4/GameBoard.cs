@@ -391,7 +391,7 @@ namespace CS4750HW4
 
             for (int j = 0; j < this.Board.GetLength(1) - 1; j++)
             {
-                for (int i = 0; i < this.Board.GetLength(0) - 1; i++)
+                for (int i = 0; i < this.Board.GetLength(0) - 0; i++)
                 {
                     if (this.Board[i, j] == valToConsider)
                     {
@@ -404,7 +404,8 @@ namespace CS4750HW4
                                 possible3rd = getPossibleNthInARow(possible2nds[x], valToConsider, dir);
                                 if (isValidSpace(possible3rd, valToConsider))
                                 {
-                                    empty4th = getPossibleNthInARow(possible3rd, BoardVals.NULL, dir);
+                                    empty4th = getPossibleNthInARow(possible3rd, dir);
+                                    //empty4th = getPossibleNthInARow(possible3rd, BoardVals.NULL, dir);
                                     if (isValidSpace(empty4th, BoardVals.NULL))
                                     {
                                         if (isNotVal(getPossibleNthInARow(new Point(i, j), getReverseDirection(dir)), valToConsider))
@@ -425,17 +426,8 @@ namespace CS4750HW4
                                             temp.Add(empty4th);
                                             threes.Add(temp);
                                         } //End if (isNotVal(getPossibleNthInARow(new Point(i,j), getReverseDirection(dir)), valToConsider))
-
-                                        /*
-                                        List<Point> temp = new List<Point>();
-                                        temp.Add(new Point(i, j));
-                                        temp.Add(possible2nds[x]);
-                                        temp.Add(possible3rd);
-                                        temp.Add(empty4th);
-                                        threes.Add(temp);
-                                        //*/
                                     } //End if (isValidSpace(empty4th, BoardVals.NULL))
-                                    else if (isValidSpace(getPossibleNthInARow(new Point(i, j), getReverseDirection(dir)), BoardVals.NULL))
+                                    else if (isValidSpace(getPossibleNthInARow(new Point(i, j), getReverseDirection(dir)), BoardVals.NULL) && isNotVal(empty4th, valToConsider))
                                     {
                                         if (isNotVal(getPossibleNthInARow(new Point(i, j), getReverseDirection(dir)), valToConsider))
                                         {
@@ -455,14 +447,6 @@ namespace CS4750HW4
                                             threes.Add(temp);
                                         } //End 
                                     } //End if (isValidSpace(getPossibleNthInARow(new Point(i, j), getReverseDirection(dir))))
-                                    
-                                    /*
-                                    List<Point> temp = new List<Point>();
-                                    temp.Add(new Point(i, j));
-                                    temp.Add(possible2nds[x]);
-                                    temp.Add(possible3rd);
-                                    threes.Add(temp);
-                                    //*/
                                 } //End if (isValidSpace(possible3rd, valToConsider))
                             } //End for (int x = 0; x < possible2nds.Count; x++)
                         } //End if (possible2nds.Count > 0)
@@ -621,7 +605,7 @@ namespace CS4750HW4
                 {
                     if (this.Board[i,j] == BoardVals.NULL)
                     {
-                        returnString += "  ";
+                        returnString += "   ";
                     } //End if (this.Board[i,j] == BoardVals.NULL)
                     else
                     {
@@ -638,7 +622,7 @@ namespace CS4750HW4
 
                 if (j < this.Board.GetLength(1) - 1)
                 {
-                    returnString += "\n-------------------------\n";
+                    returnString += "\n------------------------------\n";
                 } //End if (j < 5 - 1)
             } //End for (int j = 0; j < 5; j ++)
 
