@@ -52,7 +52,7 @@ namespace CS4750HW4
             return returnVal;
         } //End public bool isValidSpace(Point tileToConsider, BoardVals valToConsider)
         
-        public bool isValidSpaceAndNotVal(Point tileToConsider, BoardVals valToAvoid)
+        public bool isNotVal(Point tileToConsider, BoardVals valToAvoid)
         {
             //Declare variables
             bool returnVal = false;
@@ -64,9 +64,17 @@ namespace CS4750HW4
                     returnVal = true;
                 } //End if (this.Board[tileToConsider.X, tileToConsider.Y] == valToConsider)
             } //End if ((tileToConsider.X >= 0 && tileToConsider.X < 5) && (tileToConsider.Y >= 0 && tileToConsider.Y < 6))
+            else
+            {
+                ///Seems stupid to always return true, however, a tile outside the game board
+                ///is indeed not the value that was passed, so technically is true.
+                ///This helps handle the case where there are n in a row, with one end against
+                ///the edge of the board.
+                returnVal = true;
+            } //End else
 
             return returnVal;
-        } //End public bool isValidSpaceAndNotVal(Point tileToConsider, BoardVals valToAvoid)
+        } //End public bool isNotVal(Point tileToConsider, BoardVals valToAvoid)
         /// <summary>
         /// Places the given value in a tile if it's empty
         /// </summary>
@@ -310,11 +318,12 @@ namespace CS4750HW4
             List<List<Point>> twos = new List<List<Point>>();
             List<Point> possible2nds = new List<Point>();
             Point empty3rd;
+            Point precedingTile;
             BoardDirection dir = BoardDirection.NUll;
 
-            for (int j = 0; j < 6; j++)
+            for (int j = 0; j < this.Board.GetLength(1) - 1; j++)
             {
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < this.Board.GetLength(0) - 1; i++)
                 {
                     if (this.Board[i,j] == valToConsider)
                     {
@@ -327,15 +336,23 @@ namespace CS4750HW4
                                 empty3rd = getPossibleNthInARow(possible2nds[x], BoardVals.NULL, dir);
                                 if (isValidSpace(empty3rd, BoardVals.NULL))
                                 {
-                                    if (isValidSpaceAndNotVal(getPossibleNthInARow(new Point(i,j), getReverseDirection(dir)), valToConsider))
+                                    if (isNotVal(getPossibleNthInARow(new Point(i,j), getReverseDirection(dir)), valToConsider))
                                     {
+                                        //Create a list containing the tiles making up the row, plus the possible empty edge tiles
                                         List<Point> temp = new List<Point>();
-                                        //Add the preceding spot if it is empty
+
+                                        //Add the preceding tile if it is empty
+                                        precedingTile = getPossibleNthInARow(new Point(i, j), getReverseDirection(dir));
+                                        if (isValidSpace(precedingTile) && this.Board[precedingTile.X, precedingTile.Y] == BoardVals.NULL)
+                                        {
+                                            temp.Add(precedingTile);
+                                        } //End if (isValidSpace(precedingTile) && this.Board[precedingTile.X, precedingTile.Y] == BoardVals.NULL)
+
                                         temp.Add(new Point(i, j));
                                         temp.Add(possible2nds[x]);
                                         temp.Add(empty3rd);
                                         twos.Add(temp);
-                                    } //End if (isValidSpaceAndNotVal(getPossibleNthInARow(new Point(i,j), getReverseDirection(dir)), valToConsider))
+                                    } //End if (isNotVal(getPossibleNthInARow(new Point(i,j), getReverseDirection(dir)), valToConsider))
                                 } //End if (isValidSpace(empty3rd, valToConsider))
 
                                 /*
@@ -347,8 +364,13 @@ namespace CS4750HW4
                             } //End for (int x = 0; x < possible2nds.Count; x++)
                         } //End if (possible2nds.Count > 0)
                     } //End if (this.Board[i,j] == valToConsider)
-                } //End for (int i = 0; i < 5; i++)
-            } //End for (int j = 0; j < 6; j++)
+                } //End for (int i = 0; i < this.Board.GetLength(0) - 1; i++)
+            } //End for (int j = 0; j < this.Board.GetLength(1) - 1; j++)
+
+            if (twos.Count > 1)
+            {
+                filterCopyNInARow(twos);
+            } //End if (twos.Count > 1)
 
             return twos;
         } //End public List<List<Point>> getTwosInARow(BoardVals valToConsider)
@@ -364,10 +386,12 @@ namespace CS4750HW4
             List<Point> possible2nds = new List<Point>();
             Point possible3rd;
             Point empty4th;
+            Point precedingTile;
+            BoardDirection dir = BoardDirection.NUll;
 
-            for (int j = 0; j < 6; j++)
+            for (int j = 0; j < this.Board.GetLength(1) - 1; j++)
             {
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < this.Board.GetLength(0) - 1; i++)
                 {
                     if (this.Board[i, j] == valToConsider)
                     {
@@ -376,20 +400,62 @@ namespace CS4750HW4
                         {
                             for (int x = 0; x < possible2nds.Count; x++)
                             {
-                                possible3rd = getPossibleNthInARow(possible2nds[x], valToConsider, determineDirectionT1ToT2(new Point(i, j), possible2nds[x]));
+                                dir = determineDirectionT1ToT2(new Point(i, j), possible2nds[x]);
+                                possible3rd = getPossibleNthInARow(possible2nds[x], valToConsider, dir);
                                 if (isValidSpace(possible3rd, valToConsider))
                                 {
-                                    empty4th = getPossibleNthInARow(possible3rd, BoardVals.NULL, determineDirectionT1ToT2(new Point(i, j), possible2nds[x]));
+                                    empty4th = getPossibleNthInARow(possible3rd, BoardVals.NULL, dir);
                                     if (isValidSpace(empty4th, BoardVals.NULL))
                                     {
+                                        if (isNotVal(getPossibleNthInARow(new Point(i, j), getReverseDirection(dir)), valToConsider))
+                                        {
+                                            //Create a list containing the tiles making up the row, plus the possible empty edge tiles
+                                            List<Point> temp = new List<Point>();
+
+                                            //Add the preceding tile if it is empty
+                                            precedingTile = getPossibleNthInARow(new Point(i, j), getReverseDirection(dir));
+                                            if (isValidSpace(precedingTile) && this.Board[precedingTile.X, precedingTile.Y] == BoardVals.NULL)
+                                            {
+                                                temp.Add(precedingTile);
+                                            } //End if (isValidSpace(precedingTile) && this.Board[precedingTile.X, precedingTile.Y] == BoardVals.NULL)
+
+                                            temp.Add(new Point(i, j));
+                                            temp.Add(possible2nds[x]);
+                                            temp.Add(possible3rd);
+                                            temp.Add(empty4th);
+                                            threes.Add(temp);
+                                        } //End if (isNotVal(getPossibleNthInARow(new Point(i,j), getReverseDirection(dir)), valToConsider))
+
+                                        /*
                                         List<Point> temp = new List<Point>();
                                         temp.Add(new Point(i, j));
                                         temp.Add(possible2nds[x]);
                                         temp.Add(possible3rd);
                                         temp.Add(empty4th);
                                         threes.Add(temp);
+                                        //*/
                                     } //End if (isValidSpace(empty4th, BoardVals.NULL))
+                                    else if (isValidSpace(getPossibleNthInARow(new Point(i, j), getReverseDirection(dir)), BoardVals.NULL))
+                                    {
+                                        if (isNotVal(getPossibleNthInARow(new Point(i, j), getReverseDirection(dir)), valToConsider))
+                                        {
+                                            //Create a list containing the tiles making up the row, plus the possible empty edge tiles
+                                            List<Point> temp = new List<Point>();
 
+                                            //Add the preceding tile if it is empty
+                                            precedingTile = getPossibleNthInARow(new Point(i, j), getReverseDirection(dir));
+                                            if (isValidSpace(precedingTile) && this.Board[precedingTile.X, precedingTile.Y] == BoardVals.NULL)
+                                            {
+                                                temp.Add(precedingTile);
+                                            } //End if (isValidSpace(precedingTile) && this.Board[precedingTile.X, precedingTile.Y] == BoardVals.NULL)
+
+                                            temp.Add(new Point(i, j));
+                                            temp.Add(possible2nds[x]);
+                                            temp.Add(possible3rd);
+                                            threes.Add(temp);
+                                        } //End 
+                                    } //End if (isValidSpace(getPossibleNthInARow(new Point(i, j), getReverseDirection(dir))))
+                                    
                                     /*
                                     List<Point> temp = new List<Point>();
                                     temp.Add(new Point(i, j));
@@ -401,8 +467,13 @@ namespace CS4750HW4
                             } //End for (int x = 0; x < possible2nds.Count; x++)
                         } //End if (possible2nds.Count > 0)
                     } //End if (this.Board[i,j] == valToConsider)
-                } //End for (int i = 0; i < 5; i++)
-            } //End for (int j = 0; j < 6; j++)
+                } //End for (int i = 0; i < this.Board.GetLength(0) - 1; i++)
+            } //End for (int j = 0; j < this.Board.GetLength(1) - 1; j++)
+
+            if (threes.Count > 1)
+            {
+                filterCopyNInARow(threes);
+            } //End if (threes.Count > 1)
 
             return threes;
         } //End public List<List<Point>> getThreesInARow(BoardVals valToConsider)
@@ -423,41 +494,41 @@ namespace CS4750HW4
                 {
                     if (tile1.Y > tile2.Y)
                     {
-                        returnVal = BoardDirection.DownRight;
+                        returnVal = BoardDirection.UpLeft;
                     } //End if (tile1.Y > tile2.Y)
                     else if (tile1.Y < tile2.Y)
                     {
-                        returnVal = BoardDirection.UpRight;
+                        returnVal = BoardDirection.DownLeft;
                     } //End else if (tile1.Y < tile2.Y)
                     else
                     {
-                        returnVal = BoardDirection.Right;
+                        returnVal = BoardDirection.Left;
                     } //End else
                 } //End if (tile1.X > tile2.X)
                 else if (tile1.X < tile2.X)
                 {
                     if (tile1.Y > tile2.Y)
                     {
-                        returnVal = BoardDirection.DownLeft;
+                        returnVal = BoardDirection.UpRight;
                     } //End if (tile1.Y > tile2.Y)
                     else if (tile1.Y < tile2.Y)
                     {
-                        returnVal = BoardDirection.UpLeft;
+                        returnVal = BoardDirection.DownRight;
                     } //End else if (tile1.Y < tile2.Y)
                     else
                     {
-                        returnVal = BoardDirection.Left;
+                        returnVal = BoardDirection.Right;
                     } //End else
                 } //End else if (tile1.X < tile2.X)
                 else
                 {
                     if (tile1.Y > tile2.Y)
                     {
-                        returnVal = BoardDirection.Down;
+                        returnVal = BoardDirection.Up;
                     } //End if (tile1.Y > tile2.Y)
                     else if (tile1.Y < tile2.Y)
                     {
-                        returnVal = BoardDirection.Up;
+                        returnVal = BoardDirection.Down;
                     } //End else if (tile1.Y < tile2.Y)
                     else
                     {
@@ -472,9 +543,9 @@ namespace CS4750HW4
         {
             this.Board = new BoardVals[5, 6];
 
-            for (int j = 0; j < 6; j++)
+            for (int j = 0; j < this.Board.GetLength(1); j++)
             {
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < this.Board.GetLength(0); i++)
                 {
                     this.Board[i, j] = BoardVals.NULL;
                 } //End for (int i = 0; i < 5; i++)
@@ -483,6 +554,7 @@ namespace CS4750HW4
 
         public BoardVals[,] getGameBoard()
         {
+            /**
             //Declare variables
             BoardVals[,] boardCopy = new BoardVals[5, 6];
 
@@ -495,6 +567,8 @@ namespace CS4750HW4
             } //End for (int j = 0; j < 6; j++)
 
             return boardCopy;
+            //*/
+            return (BoardVals[,])this.Board.Clone();
         } //End public BoardVals[,] getGameBoard()
         
         public BoardDirection getReverseDirection(BoardDirection direction)
@@ -534,6 +608,91 @@ namespace CS4750HW4
 
             return reverseDirection;
         } //End public BoardDirection getReverseDirection(BoardDirection direction)
+        
+        public string displayBoard()
+        {
+            //Declare variables
+            string returnString = "";
+
+            for (int j = 0; j < this.Board.GetLength(1); j ++)
+            {
+                returnString += "| ";
+                for (int i = 0; i < this.Board.GetLength(0); i++)
+                {
+                    if (this.Board[i,j] == BoardVals.NULL)
+                    {
+                        returnString += "  ";
+                    } //End if (this.Board[i,j] == BoardVals.NULL)
+                    else
+                    {
+                        returnString += this.Board[i, j].ToString();
+                    } //End else
+
+                    if (i < this.Board.GetLength(0) - 1)
+                    {
+                        returnString += " | ";
+                    } //End if (i < 6 - 1)
+                } //End for (int i = 0; i < 5; i++)
+
+                returnString += " |";
+
+                if (j < this.Board.GetLength(1) - 1)
+                {
+                    returnString += "\n-------------------------\n";
+                } //End if (j < 5 - 1)
+            } //End for (int j = 0; j < 5; j ++)
+
+            return returnString;
+        } //End public string displayBoard()
+
+        private void filterCopyNInARow(List<List<Point>> nsInARow)
+        {
+            //Declare variables
+            List<Point> temp;
+            int numMatches = 0;
+
+            for (int k = 0; k < nsInARow.Count; k++)
+            {
+                temp = nsInARow[k];
+
+                for (int j = 0; j < nsInARow.Count; j++)
+                {
+                    numMatches = 0;
+
+                    if (j == k)
+                    {
+                        if (j < nsInARow.Count - 1)
+                        {
+                            j += 1;
+                        } //End 
+                        else
+                        {
+                            break;
+                        } //End else
+                    } //End if (j == k)
+
+                    for (int i = 0; i < nsInARow[j].Count; i++)
+                    {
+                        for (int x = 0; x < temp.Count; x++)
+                        {
+                            if (temp[x] == nsInARow[j][i])
+                            {
+                                numMatches += 1;
+                            } //End if (temp[x] == nsInARow[j][i])
+                        } //End for (int x = 0; x < temp.Count; x++)
+                    } //End for (int i = 0; i < nsInARow[j].Count; i++)
+
+                    if (numMatches == nsInARow[j].Count && numMatches == temp.Count)
+                    {
+                        nsInARow.RemoveAt(j);
+                        j--;
+                    } //End if (numMatches == nsInARow[j].Count && numMatches == temp.Count)
+                } //End for (int j = 0; j < nsInARow.Count; j++)
+            } //End for (int k = 0; k < nsInARow.Count; k++)
+
+
+
+        } //End 
 
     } //End class Board
 } //End namespace CS4750HW4

@@ -14,15 +14,15 @@ namespace CS4750HW4
 
         //Properties
         public GameBoard Board { get; private set; }
-        public BoardVals XorO { get; private set; }
+        public BoardVals PlayersVal { get; private set; }
         private BoardVals OpponentsVal
         {
             get
             {
-                if (XorO == BoardVals.X)
+                if (PlayersVal == BoardVals.X)
                 {
                     return BoardVals.O;
-                } //End if (XorO == BoardVals.X)
+                } //End if (PlayersVal == BoardVals.X)
                 else
                 {
                     return BoardVals.X;
@@ -31,9 +31,9 @@ namespace CS4750HW4
         } //End private BoardVals OpponentsVal
 
         /***************CONSTRUCTOR***************/
-        public Beginner (BoardVals _XorO)
+        public Beginner (BoardVals _PlayersVal)
         {
-            this.XorO = _XorO;
+            this.PlayersVal = _PlayersVal;
             this.Board = new GameBoard();
         } //End 
 
@@ -54,11 +54,12 @@ namespace CS4750HW4
                 {
                     if (this.Board.isValidSpace(threesInARow[0][x], BoardVals.NULL))
                     {
-                        if (this.Board.setState(threesInARow[0][x], this.XorO))
+                        if (this.Board.setState(threesInARow[0][x], this.PlayersVal))
                         {
+                            move = threesInARow[0][x];
                             skipRand = true;
                             break;
-                        } //End if (this.Board.setState(threesInARow[0][x], this.XorO))
+                        } //End if (this.Board.setState(threesInARow[0][x], this.PlayersVal))
                         else
                         {
                             ///How did this happen?

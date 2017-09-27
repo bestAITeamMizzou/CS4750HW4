@@ -30,6 +30,14 @@ namespace CS4750HW4
         DownRight = 7
     } //End public enum BoardDirection
 
+    public enum Difficulty
+    {
+        NULL = -1,
+        Beginner = 0,
+        Advanced = 1,
+        Master = 2
+    } //End public enum Difficulty
+
     public partial class Form1 : Form
     {
         /***************ATTRIBUTES***************/
@@ -37,6 +45,9 @@ namespace CS4750HW4
 
 
         //Properties
+        private GameBoard Board { get; set; }
+        private Difficulty Difficulty { get; set; }
+        private Beginner Beginner { get; set; }
 
         /***************CONSTRUCTOR***************/
         public Form1()
@@ -44,24 +55,38 @@ namespace CS4750HW4
             InitializeComponent();
             this.cmbRow.SelectedIndex = 0;
             this.cmbColumn.SelectedIndex = 0;
+            this.Board = new GameBoard();
+            this.Beginner = new Beginner(BoardVals.X);
+            displayData(this.Board.displayBoard());
         } //End public Form1
 
         /***************METHODS***************/
         public void displayData(string data)
         {
-
-        } //End 
+            //this.rtxtDisplay.Text += data + "\n\n" + "*****************************************************************\n";
+            this.rtxtDisplay.Text = data;
+        } //End public void displayData(string data)
 
 
         /***************EVENTS***************/
         private void btnPlace_Click(object sender, EventArgs e)
         {
+            //Declare variables
+            Point playerChoice = new Point(this.cmbRow.SelectedIndex, this.cmbColumn.SelectedIndex);
 
+            this.Board.setState(playerChoice, BoardVals.O);
+            this.Beginner.Board.setState(playerChoice, BoardVals.O);
+            displayData(this.Board.displayBoard());
         } //End private void btnPlace_Click(object sender, EventArgs e)
 
         private void btnBeginner_Click(object sender, EventArgs e)
         {
+            //Declare variables
+            Point move = this.Beginner.BeginnerDecision();
 
+            this.Board.setState(move, this.Beginner.PlayersVal);
+            this.Beginner.Board.setState(move, this.Beginner.PlayersVal);
+            displayData(this.Board.displayBoard());
         } //End private void btnBeginner_Click(object sender, EventArgs e)
 
         private void btnAdvanced_Click(object sender, EventArgs e)

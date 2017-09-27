@@ -32,7 +32,7 @@
             this.btnAdvanced = new System.Windows.Forms.Button();
             this.btnMaster = new System.Windows.Forms.Button();
             this.btnTournament = new System.Windows.Forms.Button();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.rtxtDisplay = new System.Windows.Forms.RichTextBox();
             this.cmbRow = new System.Windows.Forms.ComboBox();
             this.cmbColumn = new System.Windows.Forms.ComboBox();
             this.lblRow = new System.Windows.Forms.Label();
@@ -80,14 +80,14 @@
             this.btnTournament.UseVisualStyleBackColor = true;
             this.btnTournament.Click += new System.EventHandler(this.btnTournament_Click);
             // 
-            // richTextBox1
+            // rtxtDisplay
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(93, 12);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(293, 440);
-            this.richTextBox1.TabIndex = 4;
-            this.richTextBox1.Text = "";
+            this.rtxtDisplay.Location = new System.Drawing.Point(93, 12);
+            this.rtxtDisplay.Name = "rtxtDisplay";
+            this.rtxtDisplay.ReadOnly = true;
+            this.rtxtDisplay.Size = new System.Drawing.Size(293, 440);
+            this.rtxtDisplay.TabIndex = 4;
+            this.rtxtDisplay.Text = "";
             // 
             // cmbRow
             // 
@@ -158,7 +158,7 @@
             this.Controls.Add(this.lblRow);
             this.Controls.Add(this.cmbColumn);
             this.Controls.Add(this.cmbRow);
-            this.Controls.Add(this.richTextBox1);
+            this.Controls.Add(this.rtxtDisplay);
             this.Controls.Add(this.btnTournament);
             this.Controls.Add(this.btnMaster);
             this.Controls.Add(this.btnAdvanced);
@@ -176,7 +176,7 @@
         private System.Windows.Forms.Button btnAdvanced;
         private System.Windows.Forms.Button btnMaster;
         private System.Windows.Forms.Button btnTournament;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.RichTextBox rtxtDisplay;
         private System.Windows.Forms.ComboBox cmbRow;
         private System.Windows.Forms.ComboBox cmbColumn;
         private System.Windows.Forms.Label lblRow;
