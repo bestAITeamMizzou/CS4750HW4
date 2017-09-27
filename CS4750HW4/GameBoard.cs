@@ -321,7 +321,7 @@ namespace CS4750HW4
             Point precedingTile;
             BoardDirection dir = BoardDirection.NUll;
 
-            for (int j = 0; j < this.Board.GetLength(1) - 1; j++)
+            for (int j = 0; j < this.Board.GetLength(1); j++)
             {
                 for (int i = 0; i < this.Board.GetLength(0); i++)
                 {
@@ -378,7 +378,7 @@ namespace CS4750HW4
                         } //End if (possible2nds.Count > 0)
                     } //End if (this.Board[i,j] == valToConsider)
                 } //End for (int i = 0; i < this.Board.GetLength(0); i++)
-            } //End for (int j = 0; j < this.Board.GetLength(1) - 1; j++)
+            } //End for (int j = 0; j < this.Board.GetLength(1); j++)
 
             if (twos.Count > 1)
             {
@@ -402,7 +402,7 @@ namespace CS4750HW4
             Point precedingTile;
             BoardDirection dir = BoardDirection.NUll;
 
-            for (int j = 0; j < this.Board.GetLength(1) - 1; j++)
+            for (int j = 0; j < this.Board.GetLength(1); j++)
             {
                 for (int i = 0; i < this.Board.GetLength(0); i++)
                 {
@@ -465,7 +465,7 @@ namespace CS4750HW4
                         } //End if (possible2nds.Count > 0)
                     } //End if (this.Board[i,j] == valToConsider)
                 } //End for (int i = 0; i < this.Board.GetLength(0); i++)
-            } //End for (int j = 0; j < this.Board.GetLength(1) - 1; j++)
+            } //End for (int j = 0; j < this.Board.GetLength(1); j++)
 
             if (threes.Count > 1)
             {
@@ -474,6 +474,56 @@ namespace CS4750HW4
 
             return threes;
         } //End public List<List<Point>> getThreesInARow(BoardVals valToConsider)
+
+        public bool findFourInARow(BoardVals valToConsider)
+        {
+            //Declare variables
+            bool foundFourInARow = false;
+            List<Point> possible2nds = new List<Point>();
+            Point possible3rd;
+            Point possible4th;
+            Point precedingTile;
+            BoardDirection dir = BoardDirection.NUll;
+
+            for (int j = 0; j < this.Board.GetLength(1) && !foundFourInARow; j++)
+            {
+                for (int i = 0; i < this.Board.GetLength(0) && !foundFourInARow; i++)
+                {
+                    if (this.Board[i, j] == valToConsider)
+                    {
+                        possible2nds = getValidSurroundingTiles(new Point(i, j), valToConsider);
+                        if (possible2nds.Count > 0)
+                        {
+                            for (int x = 0; x < possible2nds.Count; x++)
+                            {
+                                dir = determineDirectionT1ToT2(new Point(i, j), possible2nds[x]);
+                                possible3rd = getPossibleNthInARow(possible2nds[x], valToConsider, dir);
+                                if (isValidSpace(possible3rd, valToConsider))
+                                {
+                                    possible4th = getPossibleNthInARow(possible3rd, dir);
+                                    //empty4th = getPossibleNthInARow(possible3rd, BoardVals.NULL, dir);
+                                    if (isValidSpace(possible4th, valToConsider))
+                                    {
+                                        foundFourInARow = true;
+                                        break;
+                                    } //End if (isValidSpace(empty4th, valToConsider))
+                                    else if (isValidSpace(getPossibleNthInARow(new Point(i, j), getReverseDirection(dir)), BoardVals.NULL) && isNotVal(possible4th, valToConsider))
+                                    {
+                                        if (isNotVal(getPossibleNthInARow(new Point(i, j), getReverseDirection(dir)), valToConsider))
+                                        {
+                                            
+                                        } //End if (isNotVal(getPossibleNthInARow(new Point(i, j), getReverseDirection(dir)), valToConsider))
+                                    } //End else if (isValidSpace(getPossibleNthInARow(new Point(i, j), getReverseDirection(dir)), BoardVals.NULL) && isNotVal(empty4th, valToConsider))
+                                } //End if (isValidSpace(possible3rd, valToConsider))
+                            } //End for (int x = 0; x < possible2nds.Count; x++)
+                        } //End if (possible2nds.Count > 0)
+                    } //End if (this.Board[i,j] == valToConsider)
+                } //End for (int i = 0; i < this.Board.GetLength(0); i++)
+            } //End for (int j = 0; j < this.Board.GetLength(1); j++)
+
+            return foundFourInARow;
+        } //End public bool findFourInARow(BoardVals valToConsider)
+
         /// <summary>
         /// Determines the direction when going from tile1 to tile 2
         /// </summary>

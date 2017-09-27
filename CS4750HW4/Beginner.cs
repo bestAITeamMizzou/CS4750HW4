@@ -46,7 +46,9 @@ namespace CS4750HW4
             List<Point> possibleMoves = new List<Point>();
             Random randMove = new Random();
             bool skipRand = false;
-            
+
+            this.Board.findFourInARow(OpponentsVal);
+
             threesInARow = this.Board.getThreesInARow(OpponentsVal);
             if (threesInARow.Count > 0)
             {
