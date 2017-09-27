@@ -62,6 +62,29 @@ namespace CS4750HW4
 
             return returnVal;
         } //End public bool isValidSpace(Point tileToConsider, BoardVals valToConsider)
+
+        public bool isTripleMembers(Point a, Point b, String[,] colorBoard)
+        {
+            String x = colorBoard[a.X, a.Y];
+            String y = colorBoard[b.X, b.Y];
+
+            foreach (char c in x)
+            {
+                foreach (char d in y)
+                {
+                    if (c == d)
+                    {
+                        return true;
+                    }
+                    else if (c < d)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return false;
+        }
         
         /// <summary>
         /// Places the given value in a tile if it's empty
@@ -290,12 +313,13 @@ namespace CS4750HW4
         /// </summary>
         /// <param name="valToConsider">Look at Xs or Os</param>
         /// <returns>A tuple representing open 3 in a rows. The first element representing Xs and the second Os.</returns>
-        public Tuple<List<List<Point>>,List<List<Point>>> getThreesInARow(Boolean[,] coloringGraph)
+        public Tuple<List<List<Point>>,List<List<Point>>> getThreesInARow(String[,] coloringGraph)
         {
             
             BoardVals[,] board = getGameBoard();//safety measure to not alter original board
             int height = board.GetLength(0);
             int width = board.GetLength(1);
+            char color = 'A';
 
             List<List<Point>> XTriples = new List<List<Point>>();
             List<List<Point>> OTriples = new List<List<Point>>();
@@ -317,15 +341,10 @@ namespace CS4750HW4
                         continue;
                     }
 
-                    threeInARowHelper(current, 1, 1, coloringGraph, XTriples, OTriples, board);//diagonal check with negative slope
-                    threeInARowHelper(current, 1, -1, coloringGraph, XTriples, OTriples, board);//diagonal check with positive slope
-                    threeInARowHelper(current, 1, 0, coloringGraph, XTriples, OTriples, board);//vertical check
-                    threeInARowHelper(current, 0, 1, coloringGraph, XTriples, OTriples, board);//horizontal check
-
-                   /*Console.WriteLine(b[i - 1, j - 1] + " " + b[i - 1, j] + " " + b[i - 1, j + 1]);
-                    Console.WriteLine(b[i, j - 1] + " " + b[i, j] + " " + b[i, j + 1]);
-                    Console.WriteLine(b[i + 1, j - 1] + " " + b[i + 1, j] + " " + b[i + 1, j + 1]);
-                    Console.WriteLine();*/
+                    checkDirectionForTriple(current, 1, 1, coloringGraph, ref color, XTriples, OTriples, board);//diagonal check with negative slope
+                    checkDirectionForTriple(current, 1, -1, coloringGraph, ref color, XTriples, OTriples, board);//diagonal check with positive slope
+                    checkDirectionForTriple(current, 1, 0, coloringGraph, ref color, XTriples, OTriples, board);//vertical check
+                    checkDirectionForTriple(current, 0, 1, coloringGraph, ref color, XTriples, OTriples, board);//horizontal check
                 }
             }
             
@@ -338,12 +357,12 @@ namespace CS4750HW4
 
                 if(!isEmptySpace(currentTop))
                 {
-                    threeInARowHelper(currentTop, 0, 1, coloringGraph, XTriples, OTriples, board);//horizontal check
+                    checkDirectionForTriple(currentTop, 0, 1, coloringGraph, ref color, XTriples, OTriples, board);//horizontal check
                 }
 
                 if(!isEmptySpace(currentBottom))
                 {
-                    threeInARowHelper(currentBottom, 0, 1, coloringGraph, XTriples, OTriples, board);//horizontal check
+                    checkDirectionForTriple(currentBottom, 0, 1, coloringGraph, ref color, XTriples, OTriples, board);//horizontal check
                 }
             }
             
@@ -355,12 +374,12 @@ namespace CS4750HW4
 
                  if(!isEmptySpace(currentLeft))
                 {
-                    threeInARowHelper(currentLeft, 1, 0, coloringGraph, XTriples, OTriples, board);//vertical check
+                    checkDirectionForTriple(currentLeft, 1, 0, coloringGraph, ref color, XTriples, OTriples, board);//vertical check
                 }
 
                 if(!isEmptySpace(currentRight))
                 {
-                    threeInARowHelper(currentRight, 1, 0, coloringGraph, XTriples, OTriples, board);//vertical check
+                    checkDirectionForTriple(currentRight, 1, 0, coloringGraph, ref color, XTriples, OTriples, board);//vertical check
                 }
             }
 
@@ -368,7 +387,7 @@ namespace CS4750HW4
             
         } //End public List<List<Point>> getThreesInARow(BoardVals valToConsider)
 
-        private void threeInARowHelper(Point center, int XOffset, int YOffset, Boolean[,] coloringGraph, List<List<Point>> XTriples, List<List<Point>> OTriples, BoardVals[,] board){
+        private void checkDirectionForTriple(Point center, int XOffset, int YOffset, String[,] coloringGraph, ref char color, List<List<Point>> XTriples, List<List<Point>> OTriples, BoardVals[,] board){
             int X = center.X;
             int Y = center.Y;
 
@@ -378,9 +397,10 @@ namespace CS4750HW4
             if(board[X - XOffset, Y - YOffset] == board[X, Y] && board[X, Y] == board[X + XOffset, Y + YOffset])
             {
                 //color the graph
-                coloringGraph[X - XOffset, Y - YOffset] = true;
-                coloringGraph[X, Y] = true;
-                coloringGraph[X + XOffset, Y + YOffset] = true;
+                coloringGraph[X - XOffset, Y - YOffset] += color;
+                coloringGraph[X, Y] += color;
+                coloringGraph[X + XOffset, Y + YOffset] += color;
+                color++;
 
                 //check if the triple is open
                 if(isEmptySpace(new Point(X - 2 * XOffset, Y - 2 * YOffset)) || isEmptySpace(new Point(X + 2 * XOffset, Y + 2 * YOffset)))
@@ -407,7 +427,7 @@ namespace CS4750HW4
 
         public int heurisic(Boolean isX)
         {
-            Boolean[,] colorBoard = new Boolean[Board.GetLength(0), Board.GetLength(1)];//data structure for not marking subsections pof 2 in a rows 
+            String[,] colorBoard = new String[Board.GetLength(0), Board.GetLength(1)];//data structure for not marking subsections pof 2 in a rows 
             Tuple<List<List<Point>>, List<List<Point>>> threeInARows = getThreesInARow(colorBoard);
 
             return isX ? 
@@ -500,7 +520,6 @@ namespace CS4750HW4
                                              {   BoardVals.X, BoardVals.NULL, BoardVals.NULL,    BoardVals.O,    BoardVals.O, BoardVals.NULL},
                                              {BoardVals.NULL, BoardVals.NULL,    BoardVals.X,    BoardVals.X,    BoardVals.X, BoardVals.NULL}};
             
-
             /*this.Board = new BoardVals[5, 6];
 
 
