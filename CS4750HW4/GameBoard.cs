@@ -311,40 +311,16 @@ namespace CS4750HW4
             {
                 for(int j = 1; j < width - 1; j++)
                 {
-                    if(isEmptySpace(new Point(i, j)))
+                    Point current = new Point(i, j);
+                    if(isEmptySpace(current))
                     {
                         continue;
                     }
 
-                    //check diagonal with negative slope
-                    if(board[i - 1, j - 1] == board[i, j] && board[i, j] == board[i + 1, j + 1])
-                    {
-                        coloringGraph[i - 1, j - 1] = true;
-                        coloringGraph[i, j] = true;
-                        coloringGraph[i + 1, j + 1] = true;
-
-                        if(isEmptySpace(new Point(i - 2, j - 2)) || isEmptySpace(new Point(i + 2, i + 2)))
-                        {
-                            if(board[i, j] == BoardVals.X)
-                            {
-                                XTriples.Add(new List<Point>()
-                                {
-                                    new Point(i - 1, j - 1),
-                                    new Point(i, j),
-                                    new Point(i + 1, j + 1)
-                                });
-                            }
-                            else
-                            {
-                                OTriples.Add(new List<Point>()
-                                {
-                                    new Point(i - 1, j - 1),
-                                    new Point(i, j),
-                                    new Point(i + 1, j + 1)
-                                });
-                            }
-                        }
-                    }
+                    threeInARowHelper(current, 1, 1, coloringGraph, XTriples, OTriples);//diagonal check with negative slope
+                    threeInARowHelper(current, 1, -1, coloringGraph, XTriples, OTriples);//diagonal check with positive slope
+                    threeInARowHelper(current, 0, 1, coloringGraph, XTriples, OTriples);//vertical check
+                    threeInARowHelper(current, 1, 0, coloringGraph, XTriples, OTriples);//horizontal check
 
                    /*Console.WriteLine(b[i - 1, j - 1] + " " + b[i - 1, j] + " " + b[i - 1, j + 1]);
                     Console.WriteLine(b[i, j - 1] + " " + b[i, j] + " " + b[i, j + 1]);
@@ -373,6 +349,46 @@ namespace CS4750HW4
             return new Tuple<List<List<Point>>, List<List<Point>>>(XTriples, OTriples);
             
         } //End public List<List<Point>> getThreesInARow(BoardVals valToConsider)
+
+        private void threeInARowHelper(Point center, int XOffset, int YOffset, Boolean[,] coloringGraph, List<List<Point>> XTriples, List<List<Point>> OTriples){
+            int X = center.X;
+            int Y = center.Y;
+
+            //check line passing through center with center being the midpoint of the line
+            //For Example #X#
+            //Where X is the center
+            if(board[X - XOffset, Y - YOffset] == board[X, Y] && board[X, Y] == board[X + XOffset, Y + YOffset])
+            {
+                //color the graph
+                coloringGraph[X - XOffset, Y - YOffset] = true;
+                coloringGraph[X, Y] = true;
+                coloringGraph[X + XOffset, Y + YOffset] = true;
+
+                //check if the triple is open
+                if(isEmptySpace(new Point(X - 2 * XOffset, Y - 2 * YOffset)) || isEmptySpace(new Point(X + 2 * XOffset, Y + 2 * YOffset)))
+                {
+                    //decide which list(X list or O list) to add it to
+                    if(board[X, Y] == BoardVals.X)
+                    {
+                        XTriples.Add(new List<Point>()
+                        {
+                            new Point(X - XOffset, Y - YOffset),
+                            new Point(X, Y),
+                            new Point(X + XOffset, Y + YOffset)
+                        });
+                    }
+                    else
+                    {
+                        OTriples.Add(new List<Point>()
+                        {
+                            new Point(X - XOffset, Y - YOffset),
+                            new Point(X, Y),
+                            new Point(X + XOffset, Y + YOffset)
+                        });
+                    }
+                }
+            }
+        }
 
         public int heurisic(Boolean isX)
         {
