@@ -319,8 +319,8 @@ namespace CS4750HW4
 
                     threeInARowHelper(current, 1, 1, coloringGraph, XTriples, OTriples, board);//diagonal check with negative slope
                     threeInARowHelper(current, 1, -1, coloringGraph, XTriples, OTriples, board);//diagonal check with positive slope
-                    threeInARowHelper(current, 0, 1, coloringGraph, XTriples, OTriples, board);//vertical check
-                    threeInARowHelper(current, 1, 0, coloringGraph, XTriples, OTriples, board);//horizontal check
+                    threeInARowHelper(current, 1, 0, coloringGraph, XTriples, OTriples, board);//vertical check
+                    threeInARowHelper(current, 0, 1, coloringGraph, XTriples, OTriples, board);//horizontal check
 
                    /*Console.WriteLine(b[i - 1, j - 1] + " " + b[i - 1, j] + " " + b[i - 1, j + 1]);
                     Console.WriteLine(b[i, j - 1] + " " + b[i, j] + " " + b[i, j + 1]);
@@ -331,20 +331,38 @@ namespace CS4750HW4
             
             //the borders are separately checked for 3 in a row for speed
             //search top and bottom borders for 3 in a row
-            /*for(int j = 1; j < b.GetLength(1) - 1; j++){
-                
-                Console.WriteLine("Top: " + b[0, j - 1] + " " + b[0, j] + " " + b[0, j + 1]);
-                Console.WriteLine("Bottom: " + b[b.GetLength(0) - 1, j - 1] + " " + b[b.GetLength(0) - 1, j] + " " + b[b.GetLength(0) - 1, j + 1]);
-            }*/
+            for(int j = 1; j < width - 1; j++){
+
+                Point currentTop = new Point(0, j);
+                Point currentBottom = new Point(height - 1, j);
+
+                if(!isEmptySpace(currentTop))
+                {
+                    threeInARowHelper(currentTop, 0, 1, coloringGraph, XTriples, OTriples, board);//horizontal check
+                }
+
+                if(!isEmptySpace(currentBottom))
+                {
+                    threeInARowHelper(currentBottom, 0, 1, coloringGraph, XTriples, OTriples, board);//horizontal check
+                }
+            }
             
-            Console.WriteLine();
-            
-            //search left border for 3 in a row
-            /*for(int i = 1; i < this.Board.GetLength(0) - 1; i++){
+            //search left and right borders for 3 in a row
+            for(int i = 1; i < height - 1; i++){
                 
-                Console.WriteLine("Left: " + this.Board[i - 1, 0] + " " + b[i, 0] + " " + b[i + 1, 0]);
-                Console.WriteLine("Right: " + this.Board[i - 1, b.GetLength(1) - 1] + " " + b[i, b.GetLength(1) - 1] + " " + b[i + 1, b.GetLength(1) - 1]);
-            }*/
+                Point currentLeft = new Point(i, 0);
+                Point currentRight = new Point(i, width - 1);
+
+                 if(!isEmptySpace(currentLeft))
+                {
+                    threeInARowHelper(currentLeft, 1, 0, coloringGraph, XTriples, OTriples, board);//vertical check
+                }
+
+                if(!isEmptySpace(currentRight))
+                {
+                    threeInARowHelper(currentRight, 1, 0, coloringGraph, XTriples, OTriples, board);//vertical check
+                }
+            }
 
             return new Tuple<List<List<Point>>, List<List<Point>>>(XTriples, OTriples);
             
@@ -368,23 +386,20 @@ namespace CS4750HW4
                 if(isEmptySpace(new Point(X - 2 * XOffset, Y - 2 * YOffset)) || isEmptySpace(new Point(X + 2 * XOffset, Y + 2 * YOffset)))
                 {
                     //decide which list(X list or O list) to add it to
+                    List<Point> triple = new List<Point>()
+                    {
+                        new Point(X - XOffset, Y - YOffset),
+                        new Point(X, Y),
+                        new Point(X + XOffset, Y + YOffset)
+                    };
+
                     if(board[X, Y] == BoardVals.X)
                     {
-                        XTriples.Add(new List<Point>()
-                        {
-                            new Point(X - XOffset, Y - YOffset),
-                            new Point(X, Y),
-                            new Point(X + XOffset, Y + YOffset)
-                        });
+                        XTriples.Add(triple);
                     }
                     else
                     {
-                        OTriples.Add(new List<Point>()
-                        {
-                            new Point(X - XOffset, Y - YOffset),
-                            new Point(X, Y),
-                            new Point(X + XOffset, Y + YOffset)
-                        });
+                        OTriples.Add(triple);
                     }
                 }
             }
@@ -479,7 +494,14 @@ namespace CS4750HW4
                                              {BoardVals.NULL,    BoardVals.O,    BoardVals.O,    BoardVals.O,    BoardVals.X, BoardVals.NULL},
                                              {BoardVals.NULL, BoardVals.NULL,    BoardVals.X, BoardVals.NULL, BoardVals.NULL,    BoardVals.O}};*/
 
-            this.Board = new BoardVals[5, 6];
+            this.Board = new BoardVals[5, 6]{{BoardVals.NULL, BoardVals.NULL, BoardVals.NULL, BoardVals.NULL, BoardVals.NULL, BoardVals.NULL},
+                                             {   BoardVals.X, BoardVals.NULL,    BoardVals.O,    BoardVals.O, BoardVals.NULL, BoardVals.NULL},
+                                             {   BoardVals.X, BoardVals.NULL, BoardVals.NULL,    BoardVals.O, BoardVals.NULL, BoardVals.NULL},
+                                             {   BoardVals.X, BoardVals.NULL, BoardVals.NULL,    BoardVals.O,    BoardVals.O, BoardVals.NULL},
+                                             {BoardVals.NULL, BoardVals.NULL,    BoardVals.X,    BoardVals.X,    BoardVals.X, BoardVals.NULL}};
+            
+
+            /*this.Board = new BoardVals[5, 6];
 
 
             for (int j = 0; j < 6; j++)
@@ -488,7 +510,7 @@ namespace CS4750HW4
                 {
                     this.Board[i, j] = BoardVals.NULL;
                 } //End for (int i = 0; i < 5; i++)
-            } //End for (int j = 0; j < 6; j++)
+            } //End for (int j = 0; j < 6; j++)*/
         } //End private void initGameBoard()
 
         

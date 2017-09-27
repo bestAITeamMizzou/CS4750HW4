@@ -76,7 +76,38 @@ namespace CS4750HW4
 
         private void btnTournament_Click(object sender, EventArgs e)
         {
+            //Testing code for 3 in a row matching
+            /*GameBoard b = new GameBoard();
+            Boolean[,] colorMap = new bool[5, 6];
+            Tuple<List<List<Point>>, List<List<Point>>> triples = b.getThreesInARow(colorMap);
+            
+            foreach(List<Point> triple in triples.Item1)
+            {
+                foreach(Point p in triple)
+                {
+                    System.Diagnostics.Debug.WriteLine(p.ToString());
+                }
+                System.Diagnostics.Debug.WriteLine("");
+            }
 
+            foreach(List<Point> triple in triples.Item2)
+            {
+                foreach(Point p in triple)
+                {
+                    System.Diagnostics.Debug.WriteLine(p.ToString());
+                }
+                System.Diagnostics.Debug.WriteLine("");
+            }
+
+            for(int i = 0; i < colorMap.GetLength(0); i++)
+            {
+                for(int j = 0; j < colorMap.GetLength(1); j++)
+                {
+                    char single = (colorMap[i, j]) ? 'T' : 'F';
+                    System.Diagnostics.Debug.Write(single);
+                }
+                System.Diagnostics.Debug.Write("\n");
+            }*/
         } //End private void btnTournament_Click(object sender, EventArgs e)
     } //End public partial class Form1 : Form
 } //End namespace CS4750HW4
