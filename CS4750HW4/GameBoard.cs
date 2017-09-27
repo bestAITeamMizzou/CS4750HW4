@@ -317,10 +317,10 @@ namespace CS4750HW4
                         continue;
                     }
 
-                    threeInARowHelper(current, 1, 1, coloringGraph, XTriples, OTriples);//diagonal check with negative slope
-                    threeInARowHelper(current, 1, -1, coloringGraph, XTriples, OTriples);//diagonal check with positive slope
-                    threeInARowHelper(current, 0, 1, coloringGraph, XTriples, OTriples);//vertical check
-                    threeInARowHelper(current, 1, 0, coloringGraph, XTriples, OTriples);//horizontal check
+                    threeInARowHelper(current, 1, 1, coloringGraph, XTriples, OTriples, board);//diagonal check with negative slope
+                    threeInARowHelper(current, 1, -1, coloringGraph, XTriples, OTriples, board);//diagonal check with positive slope
+                    threeInARowHelper(current, 0, 1, coloringGraph, XTriples, OTriples, board);//vertical check
+                    threeInARowHelper(current, 1, 0, coloringGraph, XTriples, OTriples, board);//horizontal check
 
                    /*Console.WriteLine(b[i - 1, j - 1] + " " + b[i - 1, j] + " " + b[i - 1, j + 1]);
                     Console.WriteLine(b[i, j - 1] + " " + b[i, j] + " " + b[i, j + 1]);
@@ -350,7 +350,7 @@ namespace CS4750HW4
             
         } //End public List<List<Point>> getThreesInARow(BoardVals valToConsider)
 
-        private void threeInARowHelper(Point center, int XOffset, int YOffset, Boolean[,] coloringGraph, List<List<Point>> XTriples, List<List<Point>> OTriples){
+        private void threeInARowHelper(Point center, int XOffset, int YOffset, Boolean[,] coloringGraph, List<List<Point>> XTriples, List<List<Point>> OTriples, BoardVals[,] board){
             int X = center.X;
             int Y = center.Y;
 
@@ -467,7 +467,20 @@ namespace CS4750HW4
         } //End private BoardDirection determineDirectionT1ToT2(Point tile1, Point tile2)
         private void initGameBoard()
         {
+            /*this.Board = new BoardVals[5, 6]{{BoardVals.NULL,    BoardVals.O, BoardVals.NULL, BoardVals.NULL,    BoardVals.O, BoardVals.NULL},
+                                             {BoardVals.NULL,    BoardVals.X,    BoardVals.O,    BoardVals.O, BoardVals.NULL, BoardVals.NULL},
+                                             {BoardVals.NULL,    BoardVals.X,    BoardVals.O,    BoardVals.X,    BoardVals.X, BoardVals.NULL},
+                                             {BoardVals.NULL,    BoardVals.X, BoardVals.NULL,    BoardVals.O, BoardVals.NULL, BoardVals.NULL},
+                                             {BoardVals.NULL, BoardVals.NULL, BoardVals.NULL, BoardVals.NULL, BoardVals.NULL, BoardVals.NULL}};
+            
+            this.Board = new BoardVals[5, 6]{{BoardVals.NULL, BoardVals.NULL, BoardVals.NULL, BoardVals.NULL, BoardVals.NULL,    BoardVals.X},
+                                             {BoardVals.NULL, BoardVals.NULL,    BoardVals.X, BoardVals.NULL,    BoardVals.X,    BoardVals.O},
+                                             {BoardVals.NULL, BoardVals.NULL, BoardVals.NULL,    BoardVals.X,    BoardVals.O, BoardVals.NULL},
+                                             {BoardVals.NULL,    BoardVals.O,    BoardVals.O,    BoardVals.O,    BoardVals.X, BoardVals.NULL},
+                                             {BoardVals.NULL, BoardVals.NULL,    BoardVals.X, BoardVals.NULL, BoardVals.NULL,    BoardVals.O}};*/
+
             this.Board = new BoardVals[5, 6];
+
 
             for (int j = 0; j < 6; j++)
             {
