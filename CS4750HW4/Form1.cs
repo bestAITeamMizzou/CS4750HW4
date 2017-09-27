@@ -82,7 +82,7 @@ namespace CS4750HW4
         private void btnBeginner_Click(object sender, EventArgs e)
         {
             //Declare variables
-            Point move = this.Beginner.BeginnerDecision();
+            Point move = this.Beginner.beginnerDecision();
 
             this.Board.setState(move, this.Beginner.PlayersVal);
             this.Beginner.Board.setState(move, this.Beginner.PlayersVal);

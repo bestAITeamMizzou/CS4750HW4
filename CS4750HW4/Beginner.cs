@@ -38,7 +38,7 @@ namespace CS4750HW4
         } //End 
 
         /***************METHODS***************/
-        public Point BeginnerDecision()
+        public Point beginnerDecision()
         {
             //Declare variables
             Point move = new Point (-1,-1);

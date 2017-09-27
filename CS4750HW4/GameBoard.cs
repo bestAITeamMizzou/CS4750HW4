@@ -17,9 +17,14 @@ namespace CS4750HW4
 
 
         /***************CONSTRUCTOR***************/
-        public GameBoard ()
+        public GameBoard()
         {
             initGameBoard();
+        } //End 
+
+        public GameBoard(BoardVals[,] _board)
+        {
+
         } //End 
 
         /***************METHODS***************/
@@ -28,7 +33,7 @@ namespace CS4750HW4
             //Declare variables
             bool returnVal = false;
 
-            if ((tile.X >= 0 && tile.X < 5) && (tile.Y >= 0 && tile.Y < 6))
+            if ((tile.X >= 0 && tile.X < this.Board.GetLength(0)) && (tile.Y >= 0 && tile.Y < this.Board.GetLength(1)))
             {
                 returnVal = true;
             } //End if ((tile.X >= 0 && tile.X < 5) && (tile.Y >= 0 && tile.Y < 6))
@@ -41,7 +46,7 @@ namespace CS4750HW4
             //Declare variables
             bool returnVal = false;
 
-            if ((tileToConsider.X >= 0 && tileToConsider.X < 5) && (tileToConsider.Y >= 0 && tileToConsider.Y < 6))
+            if ((tileToConsider.X >= 0 && tileToConsider.X < this.Board.GetLength(0)) && (tileToConsider.Y >= 0 && tileToConsider.Y < this.Board.GetLength(1)))
             {
                 if (this.Board[tileToConsider.X, tileToConsider.Y] == valToConsider)
                 {
@@ -103,9 +108,9 @@ namespace CS4750HW4
             //Declare variables
             List<Point> possibleMoves = new List<Point>();
 
-            for (int j = 0; j < 6; j++)
+            for (int j = 0; j < this.Board.GetLength(1); j++)
             {
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < this.Board.GetLength(0); i++)
                 {
                     if (this.Board[i,j] == BoardVals.NULL)
                     {
@@ -482,7 +487,6 @@ namespace CS4750HW4
             List<Point> possible2nds = new List<Point>();
             Point possible3rd;
             Point possible4th;
-            Point precedingTile;
             BoardDirection dir = BoardDirection.NUll;
 
             for (int j = 0; j < this.Board.GetLength(1) && !foundFourInARow; j++)
@@ -507,13 +511,6 @@ namespace CS4750HW4
                                         foundFourInARow = true;
                                         break;
                                     } //End if (isValidSpace(empty4th, valToConsider))
-                                    else if (isValidSpace(getPossibleNthInARow(new Point(i, j), getReverseDirection(dir)), BoardVals.NULL) && isNotVal(possible4th, valToConsider))
-                                    {
-                                        if (isNotVal(getPossibleNthInARow(new Point(i, j), getReverseDirection(dir)), valToConsider))
-                                        {
-                                            
-                                        } //End if (isNotVal(getPossibleNthInARow(new Point(i, j), getReverseDirection(dir)), valToConsider))
-                                    } //End else if (isValidSpace(getPossibleNthInARow(new Point(i, j), getReverseDirection(dir)), BoardVals.NULL) && isNotVal(empty4th, valToConsider))
                                 } //End if (isValidSpace(possible3rd, valToConsider))
                             } //End for (int x = 0; x < possible2nds.Count; x++)
                         } //End if (possible2nds.Count > 0)
@@ -586,15 +583,29 @@ namespace CS4750HW4
 
             return returnVal;
         } //End private BoardDirection determineDirectionT1ToT2(Point tile1, Point tile2)
+
         private void initGameBoard()
         {
-            this.Board = new BoardVals[5, 6];
+            this.Board = new BoardVals[6, 5];
 
             for (int j = 0; j < this.Board.GetLength(1); j++)
             {
                 for (int i = 0; i < this.Board.GetLength(0); i++)
                 {
                     this.Board[i, j] = BoardVals.NULL;
+                } //End for (int i = 0; i < 5; i++)
+            } //End for (int j = 0; j < 6; j++)
+        } //End private void initGameBoard()
+
+        private void initGameBoard(BoardVals[,] board)
+        {
+            this.Board = new BoardVals[6, 5];
+
+            for (int j = 0; j < this.Board.GetLength(1); j++)
+            {
+                for (int i = 0; i < this.Board.GetLength(0); i++)
+                {
+                    this.Board[i, j] = board[i,j];
                 } //End for (int i = 0; i < 5; i++)
             } //End for (int j = 0; j < 6; j++)
         } //End private void initGameBoard()
@@ -685,7 +696,7 @@ namespace CS4750HW4
 
                 if (j < this.Board.GetLength(1) - 1)
                 {
-                    returnString += "\n------------------------------\n";
+                    returnString += "\n------------------------------------\n";
                 } //End if (j < 5 - 1)
             } //End for (int j = 0; j < 5; j ++)
 
@@ -755,7 +766,7 @@ namespace CS4750HW4
             return heuristicVal;
         } //End public int getHeuristicVal(BoardVals valToConsider)
 
-        private BoardVals oppositeVal(BoardVals val)
+        public BoardVals oppositeVal(BoardVals val)
         {
             //Declare variables
             BoardVals returnVal = BoardVals.NULL;

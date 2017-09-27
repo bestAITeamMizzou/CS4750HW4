@@ -98,7 +98,8 @@
             "1",
             "2",
             "3",
-            "4"});
+            "4",
+            "5"});
             this.cmbRow.Location = new System.Drawing.Point(12, 25);
             this.cmbRow.Name = "cmbRow";
             this.cmbRow.Size = new System.Drawing.Size(75, 21);
@@ -113,8 +114,7 @@
             "1",
             "2",
             "3",
-            "4",
-            "5"});
+            "4"});
             this.cmbColumn.Location = new System.Drawing.Point(12, 65);
             this.cmbColumn.Name = "cmbColumn";
             this.cmbColumn.Size = new System.Drawing.Size(75, 21);
