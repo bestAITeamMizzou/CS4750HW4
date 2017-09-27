@@ -47,7 +47,8 @@ namespace CS4750HW4
             Random randMove = new Random();
             bool skipRand = false;
 
-            threesInARow = this.Board.getThreesInARow(OpponentsVal);
+            //threesInARow = this.Board.getThreesInARow(OpponentsVal);
+            threesInARow = this.Board.getTwosInARow(OpponentsVal);
             if (threesInARow.Count > 0)
             {
                 for (int x = 0; x < threesInARow[0].Count; x++)
