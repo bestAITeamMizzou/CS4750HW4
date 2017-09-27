@@ -23,13 +23,23 @@ namespace CS4750HW4
         } //End 
 
         /***************METHODS***************/
+        
+        /// <summary>
+        ///     Determines whether a point contains an empty space
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns>True if the point refrences an empty tile. False otherwise.</returns>
+        private bool isEmptySpace(Point p)
+        {
+            return isValidSpace(p) && this.Board[p.X, p.Y] == BoardVals.NULL;
+        }
 
         private bool isValidSpace(Point tile)
         {
             //Declare variables
             bool returnVal = false;
 
-            if ((tile.X >= 0 && tile.X < board.GetLength(0)) && (tile.Y >= 0 && tile.Y < board.GetLength(1)))
+            if ((tile.X >= 0 && tile.X < Board.GetLength(0)) && (tile.Y >= 0 && tile.Y < Board.GetLength(1)))
             {
                 returnVal = true;
             } //End if ((tile.X >= 0 && tile.X < board.GetLength(0)) && (tile.Y >= 0 && tile.Y < board.GetLength(1)))
@@ -52,6 +62,7 @@ namespace CS4750HW4
 
             return returnVal;
         } //End public bool isValidSpace(Point tileToConsider, BoardVals valToConsider)
+        
         /// <summary>
         /// Places the given value in a tile if it's empty
         /// </summary>
@@ -71,6 +82,7 @@ namespace CS4750HW4
 
             return returnVal;
         } //End public bool setState(Point tileToConsider, BoardVals valToBePlaced)
+
         /// <summary>
         /// Gets all the possible moves, ie. all the empty spaces
         /// </summary>
@@ -93,6 +105,7 @@ namespace CS4750HW4
 
             return possibleMoves;
         } //End public List<Point> getPossibleMoves()
+
         /// <summary>
         /// Gets all the possible surrounding tiles that are the same as the one considering
         /// </summary>
@@ -154,6 +167,7 @@ namespace CS4750HW4
 
             return validTiles;
         } //End private List<Point> getValidSurroundingTiles(Point tileToConsider, BoardVals valToConsider)
+        
         /// <summary>
         /// Gets the next tile in a row based on the tile and direction given
         /// </summary>
@@ -222,6 +236,7 @@ namespace CS4750HW4
 
             return validTile;
         } //End private Point getPossibleNthInARow(Point tileToConsider, BoardVals valToConsider, BoardDirection direction)
+        
         /// <summary>
         /// Finds 2 tiles in the same direction with an empty space at one end
         /// </summary>
@@ -269,71 +284,107 @@ namespace CS4750HW4
 
             return twos;
         } //End public List<List<Point>> getTwosInARow(BoardVals valToConsider)
+        
         /// <summary>
         /// Finds 3 tiles all in the same direction with an empty space at one end
         /// </summary>
         /// <param name="valToConsider">Look at Xs or Os</param>
-        /// <returns></returns>
-        public List<List<Point>> getThreesInARow(BoardVals valToConsider)
+        /// <returns>A tuple representing open 3 in a rows. The first element representing Xs and the second Os.</returns>
+        public Tuple<List<List<Point>>,List<List<Point>>> getThreesInARow(Boolean[,] coloringGraph)
         {
-            //Declare variables
-            List<List<Point>> threes = new List<List<Point>>();
-            List<Point> possible2nds = new List<Point>();
-            Point possible3rd;
-            Point empty4th;
+            
+            BoardVals[,] board = getGameBoard();//safety measure to not alter original board
+            int height = board.GetLength(0);
+            int width = board.GetLength(1);
 
-            for (int j = 0; j < 6; j++)
+            List<List<Point>> XTriples = new List<List<Point>>();
+            List<List<Point>> OTriples = new List<List<Point>>();
+            
+            /*
+             * ########
+             * #XXXXXX#
+             * #XXXXXX#
+             * ########
+             */
+            //search mid section(like the Xs in ^^^the picture^^^) for 3 in a row
+            for(int i = 1; i < height - 1; i++)
             {
-                for (int i = 0; i < 5; i++)
+                for(int j = 1; j < width - 1; j++)
                 {
-                    if (this.Board[i, j] == valToConsider)
+                    if(isEmptySpace(new Point(i, j)))
                     {
-                        possible2nds = getValidSurroundingTiles(new Point(i, j), valToConsider);
-                        if (possible2nds.Count > 0)
+                        continue;
+                    }
+
+                    //check diagonal with negative slope
+                    if(board[i - 1, j - 1] == board[i, j] && board[i, j] == board[i + 1, j + 1])
+                    {
+                        coloringGraph[i - 1, j - 1] = true;
+                        coloringGraph[i, j] = true;
+                        coloringGraph[i + 1, j + 1] = true;
+
+                        if(isEmptySpace(new Point(i - 2, j - 2)) || isEmptySpace(new Point(i + 2, i + 2)))
                         {
-                            for (int x = 0; x < possible2nds.Count; x++)
+                            if(board[i, j] == BoardVals.X)
                             {
-                                possible3rd = getPossibleNthInARow(possible2nds[x], valToConsider, determineDirectionT1ToT2(new Point(i, j), possible2nds[x]));
-                                if (isValidSpace(possible3rd, valToConsider))
+                                XTriples.Add(new List<Point>()
                                 {
-                                    empty4th = getPossibleNthInARow(possible3rd, BoardVals.NULL, determineDirectionT1ToT2(new Point(i, j), possible2nds[x]));
-                                    if (isValidSpace(empty4th, BoardVals.NULL))
-                                    {
-                                        List<Point> temp = new List<Point>();
-                                        temp.Add(new Point(i, j));
-                                        temp.Add(possible2nds[x]);
-                                        temp.Add(possible3rd);
-                                        temp.Add(empty4th);
-                                        threes.Add(temp);
-                                    } //End if (isValidSpace(empty4th, BoardVals.NULL))
+                                    new Point(i - 1, j - 1),
+                                    new Point(i, j),
+                                    new Point(i + 1, j + 1)
+                                });
+                            }
+                            else
+                            {
+                                OTriples.Add(new List<Point>()
+                                {
+                                    new Point(i - 1, j - 1),
+                                    new Point(i, j),
+                                    new Point(i + 1, j + 1)
+                                });
+                            }
+                        }
+                    }
 
-                                    /*
-                                    List<Point> temp = new List<Point>();
-                                    temp.Add(new Point(i, j));
-                                    temp.Add(possible2nds[x]);
-                                    temp.Add(possible3rd);
-                                    threes.Add(temp);
-                                    //*/
-                                } //End if (isValidSpace(possible3rd, valToConsider))
-                            } //End for (int x = 0; x < possible2nds.Count; x++)
-                        } //End if (possible2nds.Count > 0)
-                    } //End if (this.Board[i,j] == valToConsider)
-                } //End for (int i = 0; i < 5; i++)
-            } //End for (int j = 0; j < 6; j++)
+                   /*Console.WriteLine(b[i - 1, j - 1] + " " + b[i - 1, j] + " " + b[i - 1, j + 1]);
+                    Console.WriteLine(b[i, j - 1] + " " + b[i, j] + " " + b[i, j + 1]);
+                    Console.WriteLine(b[i + 1, j - 1] + " " + b[i + 1, j] + " " + b[i + 1, j + 1]);
+                    Console.WriteLine();*/
+                }
+            }
+            
+            //the borders are separately checked for 3 in a row for speed
+            //search top and bottom borders for 3 in a row
+            /*for(int j = 1; j < b.GetLength(1) - 1; j++){
+                
+                Console.WriteLine("Top: " + b[0, j - 1] + " " + b[0, j] + " " + b[0, j + 1]);
+                Console.WriteLine("Bottom: " + b[b.GetLength(0) - 1, j - 1] + " " + b[b.GetLength(0) - 1, j] + " " + b[b.GetLength(0) - 1, j + 1]);
+            }*/
+            
+            Console.WriteLine();
+            
+            //search left border for 3 in a row
+            /*for(int i = 1; i < this.Board.GetLength(0) - 1; i++){
+                
+                Console.WriteLine("Left: " + this.Board[i - 1, 0] + " " + b[i, 0] + " " + b[i + 1, 0]);
+                Console.WriteLine("Right: " + this.Board[i - 1, b.GetLength(1) - 1] + " " + b[i, b.GetLength(1) - 1] + " " + b[i + 1, b.GetLength(1) - 1]);
+            }*/
 
-            return threes;
+            return new Tuple<List<List<Point>>, List<List<Point>>>(XTriples, OTriples);
+            
         } //End public List<List<Point>> getThreesInARow(BoardVals valToConsider)
 
         public int heurisic(Boolean isX)
         {
-            Boolean[,] colorBoard = new Boolean[board.GetLength(0), board.GetLength(1)];//data structure for not marking subsections pof 2 in a rows 
+            Boolean[,] colorBoard = new Boolean[Board.GetLength(0), Board.GetLength(1)];//data structure for not marking subsections pof 2 in a rows 
+            Tuple<List<List<Point>>, List<List<Point>>> threeInARows = getThreesInARow(colorBoard);
 
             return isX ? 
                 //heuristic for X
-                getThreesInARow(BoardVals.X).Count * 3 - getThreesInARow(BoardVals.O) * 3 + getTwosInARow(BoardVals.X).Count - getTwosInARow(BoardVals.O).Count
+                threeInARows.Item1.Count * 3 - threeInARows.Item2.Count * 3 + getTwosInARow(BoardVals.X).Count - getTwosInARow(BoardVals.O).Count
             :
                 //heuristic for O
-                getThreesInARow(BoardVals.O).Count * 3 - getThreesInARow(BoardVals.X) * 3 + getTwosInARow(BoardVals.O).Count - getTwosInARow(BoardVals.X).Count;
+                threeInARows.Item2.Count * 3 - threeInARows.Item1.Count * 3 + getTwosInARow(BoardVals.O).Count - getTwosInARow(BoardVals.X).Count;
         }
         
         /// <summary>
