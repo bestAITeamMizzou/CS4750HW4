@@ -21,5 +21,6 @@ namespace CS4750HW4
 
         /***************METHODS***************/
 
+
     } //End class Advanced
 } //End namespace CS4750

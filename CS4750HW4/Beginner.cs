@@ -46,9 +46,8 @@ namespace CS4750HW4
             List<Point> possibleMoves = new List<Point>();
             Random randMove = new Random();
             bool skipRand = false;
-
-            //threesInARow = this.Board.getThreesInARow(OpponentsVal);
-            threesInARow = this.Board.getTwosInARow(OpponentsVal);
+            
+            threesInARow = this.Board.getThreesInARow(OpponentsVal);
             if (threesInARow.Count > 0)
             {
                 for (int x = 0; x < threesInARow[0].Count; x++)
@@ -83,6 +82,7 @@ namespace CS4750HW4
                     } //End while (!this.Board.isValidSpace(move, BoardVals.NULL))
                 } //End if (possibleMoves.Count > 0)
             } //End (!skipRand)
+
 
             return move;
         } //End 

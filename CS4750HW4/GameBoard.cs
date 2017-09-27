@@ -691,5 +691,36 @@ namespace CS4750HW4
 
         } //End 
 
+        public int getHeuristicVal(BoardVals valToConsider)
+        {
+            //Declare variables
+            int heuristicVal;
+            List<List<Point>> threesPlayer = getThreesInARow(valToConsider);
+            List<List<Point>> twosPlayer = getTwosInARow(valToConsider);
+            List<List<Point>> threesOpponent = getThreesInARow(oppositeVal(valToConsider));
+            List<List<Point>> twosOpponent = getTwosInARow(oppositeVal(valToConsider));
+
+            heuristicVal = 3 * threesPlayer.Count - 3 * threesOpponent.Count + twosPlayer.Count - twosOpponent.Count;
+
+            return heuristicVal;
+        } //End public int getHeuristicVal(BoardVals valToConsider)
+
+        private BoardVals oppositeVal(BoardVals val)
+        {
+            //Declare variables
+            BoardVals returnVal = BoardVals.NULL;
+
+            if (val == BoardVals.O)
+            {
+                returnVal = BoardVals.X;
+            } //End if (val == BoardVals.O)
+            else if (val == BoardVals.X)
+            {
+                returnVal = BoardVals.O;
+            } //End else if (val == BoardVals.X)
+
+            return returnVal;
+        } //End private BoardVals oppositeVal(BoardVals val)
+
     } //End class Board
 } //End namespace CS4750HW4
