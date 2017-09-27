@@ -51,6 +51,22 @@ namespace CS4750HW4
 
             return returnVal;
         } //End public bool isValidSpace(Point tileToConsider, BoardVals valToConsider)
+        
+        public bool isValidSpaceAndNotVal(Point tileToConsider, BoardVals valToAvoid)
+        {
+            //Declare variables
+            bool returnVal = false;
+
+            if ((tileToConsider.X >= 0 && tileToConsider.X < 5) && (tileToConsider.Y >= 0 && tileToConsider.Y < 6))
+            {
+                if (this.Board[tileToConsider.X, tileToConsider.Y] != valToAvoid)
+                {
+                    returnVal = true;
+                } //End if (this.Board[tileToConsider.X, tileToConsider.Y] == valToConsider)
+            } //End if ((tileToConsider.X >= 0 && tileToConsider.X < 5) && (tileToConsider.Y >= 0 && tileToConsider.Y < 6))
+
+            return returnVal;
+        } //End public bool isValidSpaceAndNotVal(Point tileToConsider, BoardVals valToAvoid)
         /// <summary>
         /// Places the given value in a tile if it's empty
         /// </summary>
@@ -163,7 +179,7 @@ namespace CS4750HW4
         private Point getPossibleNthInARow(Point tileToConsider, BoardVals valToConsider, BoardDirection direction)
         {
             //Declare variables
-            Point validTile = new Point (-1, -1);
+            Point validTile = new Point(-1, -1);
 
             switch (direction)
             {
@@ -221,6 +237,68 @@ namespace CS4750HW4
 
             return validTile;
         } //End private Point getPossibleNthInARow(Point tileToConsider, BoardVals valToConsider, BoardDirection direction)
+
+        private Point getPossibleNthInARow(Point tileToConsider, BoardDirection direction)
+        {
+            //Declare variables
+            Point validTile = new Point(-1, -1);
+
+            switch (direction)
+            {
+                case BoardDirection.Up:
+                    if (isValidSpace(new Point(tileToConsider.X, tileToConsider.Y - 1)))
+                    {
+                        validTile = new Point(tileToConsider.X, tileToConsider.Y - 1);
+                    } //End if (isValidSpace(new Point(tileToConsider.X, tileToConsider.Y - 1), valToConsider))
+                    break;
+                case BoardDirection.Down:
+                    if (isValidSpace(new Point(tileToConsider.X, tileToConsider.Y + 1)))
+                    {
+                        validTile = new Point(tileToConsider.X, tileToConsider.Y + 1);
+                    } //End if (isValidSpace(new Point(tileToConsider.X, tileToConsider.Y + 1), valToConsider))
+                    break;
+                case BoardDirection.Left:
+                    if (isValidSpace(new Point(tileToConsider.X - 1, tileToConsider.Y)))
+                    {
+                        validTile = new Point(tileToConsider.X - 1, tileToConsider.Y);
+                    } //End if (isValidSpace(new Point(tileToConsider.X - 1, tileToConsider.Y), valToConsider))
+                    break;
+                case BoardDirection.Right:
+                    if (isValidSpace(new Point(tileToConsider.X + 1, tileToConsider.Y)))
+                    {
+                        validTile = new Point(tileToConsider.X + 1, tileToConsider.Y);
+                    } //End if (isValidSpace(new Point(tileToConsider.X + 1, tileToConsider.Y), valToConsider))
+                    break;
+                case BoardDirection.UpLeft:
+                    if (isValidSpace(new Point(tileToConsider.X - 1, tileToConsider.Y - 1)))
+                    {
+                        validTile = new Point(tileToConsider.X - 1, tileToConsider.Y - 1);
+                    } //End if (isValidSpace(new Point(tileToConsider.X - 1, tileToConsider.Y - 1), valToConsider))
+                    break;
+                case BoardDirection.UpRight:
+                    if (isValidSpace(new Point(tileToConsider.X + 1, tileToConsider.Y - 1)))
+                    {
+                        validTile = new Point(tileToConsider.X + 1, tileToConsider.Y - 1);
+                    } //End if (isValidSpace(new Point(tileToConsider.X + 1, tileToConsider.Y - 1), valToConsider))
+                    break;
+                case BoardDirection.DownLeft:
+                    if (isValidSpace(new Point(tileToConsider.X - 1, tileToConsider.Y + 1)))
+                    {
+                        validTile = new Point(tileToConsider.X - 1, tileToConsider.Y + 1);
+                    } //End if (isValidSpace(new Point(tileToConsider.X - 1, tileToConsider.Y + 1), valToConsider))
+                    break;
+                case BoardDirection.DownRight:
+                    if (isValidSpace(new Point(tileToConsider.X + 1, tileToConsider.Y + 1)))
+                    {
+                        validTile = new Point(tileToConsider.X + 1, tileToConsider.Y + 1);
+                    } //End if (isValidSpace(new Point(tileToConsider.X + 1, tileToConsider.Y + 1), valToConsider))
+                    break;
+                default:
+                    break;
+            } //End switch (direction)
+
+            return validTile;
+        } //End private Point getPossibleNthInARow(Point tileToConsider, BoardVals valToConsider, BoardDirection direction)
         /// <summary>
         /// Finds 2 tiles in the same direction with an empty space at one end
         /// </summary>
@@ -232,6 +310,7 @@ namespace CS4750HW4
             List<List<Point>> twos = new List<List<Point>>();
             List<Point> possible2nds = new List<Point>();
             Point empty3rd;
+            BoardDirection dir = BoardDirection.NUll;
 
             for (int j = 0; j < 6; j++)
             {
@@ -244,14 +323,19 @@ namespace CS4750HW4
                         {
                             for (int x = 0; x < possible2nds.Count; x++)
                             {
-                                empty3rd = getPossibleNthInARow(possible2nds[x], BoardVals.NULL, determineDirectionT1ToT2(new Point(i, j), possible2nds[x]));
+                                dir = determineDirectionT1ToT2(new Point(i, j), possible2nds[x]);
+                                empty3rd = getPossibleNthInARow(possible2nds[x], BoardVals.NULL, dir);
                                 if (isValidSpace(empty3rd, BoardVals.NULL))
                                 {
-                                    List<Point> temp = new List<Point>();
-                                    temp.Add(new Point(i, j));
-                                    temp.Add(possible2nds[x]);
-                                    temp.Add(empty3rd);
-                                    twos.Add(temp);
+                                    if (isValidSpaceAndNotVal(getPossibleNthInARow(new Point(i,j), getReverseDirection(dir)), valToConsider))
+                                    {
+                                        List<Point> temp = new List<Point>();
+                                        //Add the preceding spot if it is empty
+                                        temp.Add(new Point(i, j));
+                                        temp.Add(possible2nds[x]);
+                                        temp.Add(empty3rd);
+                                        twos.Add(temp);
+                                    } //End if (isValidSpaceAndNotVal(getPossibleNthInARow(new Point(i,j), getReverseDirection(dir)), valToConsider))
                                 } //End if (isValidSpace(empty3rd, valToConsider))
 
                                 /*
@@ -412,6 +496,44 @@ namespace CS4750HW4
 
             return boardCopy;
         } //End public BoardVals[,] getGameBoard()
+        
+        public BoardDirection getReverseDirection(BoardDirection direction)
+        {
+            //Declare variables
+            BoardDirection reverseDirection = BoardDirection.NUll;
+
+            switch (direction)
+            {
+                case BoardDirection.Up:
+                    reverseDirection = BoardDirection.Down;
+                    break;
+                case BoardDirection.Down:
+                    reverseDirection = BoardDirection.Up;
+                    break;
+                case BoardDirection.Left:
+                    reverseDirection = BoardDirection.Right;
+                    break;
+                case BoardDirection.Right:
+                    reverseDirection = BoardDirection.Left;
+                    break;
+                case BoardDirection.UpLeft:
+                    reverseDirection = BoardDirection.DownRight;
+                    break;
+                case BoardDirection.UpRight:
+                    reverseDirection = BoardDirection.DownLeft;
+                    break;
+                case BoardDirection.DownLeft:
+                    reverseDirection = BoardDirection.UpRight;
+                    break;
+                case BoardDirection.DownRight:
+                    reverseDirection = BoardDirection.UpLeft;
+                    break;
+                default:
+                    break;
+            } //End switch (direction)
+
+            return reverseDirection;
+        } //End public BoardDirection getReverseDirection(BoardDirection direction)
 
     } //End class Board
 } //End namespace CS4750HW4
