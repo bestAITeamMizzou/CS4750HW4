@@ -612,20 +612,6 @@ namespace CS4750HW4
 
         public BoardVals[,] getGameBoard()
         {
-            /**
-            //Declare variables
-            BoardVals[,] boardCopy = new BoardVals[5, 6];
-
-            for (int j = 0; j < 6; j++)
-            {
-                for (int i = 0; i < 5; i++)
-                {
-                    boardCopy[i, j] = this.Board[i, j];
-                } //End for (int i = 0; i < 5; i++)
-            } //End for (int j = 0; j < 6; j++)
-
-            return boardCopy;
-            //*/
             return (BoardVals[,])this.Board.Clone();
         } //End public BoardVals[,] getGameBoard()
         
@@ -696,7 +682,7 @@ namespace CS4750HW4
 
                 if (j < this.Board.GetLength(1) - 1)
                 {
-                    returnString += "\n------------------------------------\n";
+                    returnString += "\n-----------------------------------\n";
                 } //End if (j < 5 - 1)
             } //End for (int j = 0; j < 5; j ++)
 

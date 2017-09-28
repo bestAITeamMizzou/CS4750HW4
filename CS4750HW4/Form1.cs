@@ -189,7 +189,7 @@ namespace CS4750HW4
                         displayMillisecondsElapsed();
                     } //End while (!this.Board.findFourInARow(this.Advanced.PlayersVal) && !this.Board.findFourInARow(this.Beginner.PlayersVal))
                 } //End else
-                
+
                 if (this.Board.findFourInARow(this.Advanced.PlayersVal) && !this.Board.findFourInARow(this.Beginner.PlayersVal))
                 {
                     if (this.Board.findFourInARow(this.Advanced.PlayersVal))
@@ -200,11 +200,11 @@ namespace CS4750HW4
                     {
                         displayDataAppend("Beginner won!");
                     } //End else if (this.Board.findFourInARow(this.Beginner.PlayersVal))
-                    else
-                    {
-                        displayDataAppend("Draw!");
-                    } //End else
                 } //End if (this.Board.findFourInARow(this.Advanced.PlayersVal) && !this.Board.findFourInARow(this.Beginner.PlayersVal))
+                else if (this.Board.getPossibleMoves().Count <= 0)
+                {
+                    displayDataAppend("Draw!");
+                } //End else if (this.Board.getPossibleMoves().Count <= 0)
             } //End if (this.chkAIOnly.Checked)
             else
             {
