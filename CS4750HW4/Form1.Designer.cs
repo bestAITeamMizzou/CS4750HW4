@@ -39,6 +39,10 @@
             this.lblColumn = new System.Windows.Forms.Label();
             this.btnPlace = new System.Windows.Forms.Button();
             this.btnReset = new System.Windows.Forms.Button();
+            this.chkAIOnly = new System.Windows.Forms.CheckBox();
+            this.chkSingleTurn = new System.Windows.Forms.CheckBox();
+            this.lblOptions = new System.Windows.Forms.Label();
+            this.chkFinishGame = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // btnBeginner
@@ -83,10 +87,10 @@
             // 
             // rtxtDisplay
             // 
-            this.rtxtDisplay.Location = new System.Drawing.Point(93, 12);
+            this.rtxtDisplay.Location = new System.Drawing.Point(107, 12);
             this.rtxtDisplay.Name = "rtxtDisplay";
             this.rtxtDisplay.ReadOnly = true;
-            this.rtxtDisplay.Size = new System.Drawing.Size(293, 440);
+            this.rtxtDisplay.Size = new System.Drawing.Size(279, 440);
             this.rtxtDisplay.TabIndex = 4;
             this.rtxtDisplay.Text = "";
             // 
@@ -153,17 +157,61 @@
             // 
             this.btnReset.Location = new System.Drawing.Point(12, 429);
             this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(75, 23);
+            this.btnReset.Size = new System.Drawing.Size(89, 23);
             this.btnReset.TabIndex = 10;
             this.btnReset.Text = "Reset";
             this.btnReset.UseVisualStyleBackColor = true;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
+            // 
+            // chkAIOnly
+            // 
+            this.chkAIOnly.AutoSize = true;
+            this.chkAIOnly.Location = new System.Drawing.Point(12, 176);
+            this.chkAIOnly.Name = "chkAIOnly";
+            this.chkAIOnly.Size = new System.Drawing.Size(60, 17);
+            this.chkAIOnly.TabIndex = 11;
+            this.chkAIOnly.Text = "AI Only";
+            this.chkAIOnly.UseVisualStyleBackColor = true;
+            // 
+            // chkSingleTurn
+            // 
+            this.chkSingleTurn.AutoSize = true;
+            this.chkSingleTurn.Location = new System.Drawing.Point(12, 199);
+            this.chkSingleTurn.Name = "chkSingleTurn";
+            this.chkSingleTurn.Size = new System.Drawing.Size(80, 17);
+            this.chkSingleTurn.TabIndex = 12;
+            this.chkSingleTurn.Text = "Single Turn";
+            this.chkSingleTurn.UseVisualStyleBackColor = true;
+            // 
+            // lblOptions
+            // 
+            this.lblOptions.AutoSize = true;
+            this.lblOptions.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblOptions.Location = new System.Drawing.Point(12, 160);
+            this.lblOptions.Name = "lblOptions";
+            this.lblOptions.Size = new System.Drawing.Size(43, 13);
+            this.lblOptions.TabIndex = 13;
+            this.lblOptions.Text = "Options";
+            // 
+            // chkFinishGame
+            // 
+            this.chkFinishGame.AutoSize = true;
+            this.chkFinishGame.Location = new System.Drawing.Point(12, 222);
+            this.chkFinishGame.Name = "chkFinishGame";
+            this.chkFinishGame.Size = new System.Drawing.Size(84, 17);
+            this.chkFinishGame.TabIndex = 14;
+            this.chkFinishGame.Text = "Finish Game";
+            this.chkFinishGame.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(401, 496);
+            this.Controls.Add(this.chkFinishGame);
+            this.Controls.Add(this.lblOptions);
+            this.Controls.Add(this.chkSingleTurn);
+            this.Controls.Add(this.chkAIOnly);
             this.Controls.Add(this.btnReset);
             this.Controls.Add(this.btnPlace);
             this.Controls.Add(this.lblColumn);
@@ -195,6 +243,10 @@
         private System.Windows.Forms.Label lblColumn;
         private System.Windows.Forms.Button btnPlace;
         private System.Windows.Forms.Button btnReset;
+        private System.Windows.Forms.CheckBox chkAIOnly;
+        private System.Windows.Forms.CheckBox chkSingleTurn;
+        private System.Windows.Forms.Label lblOptions;
+        private System.Windows.Forms.CheckBox chkFinishGame;
     }
 }
 

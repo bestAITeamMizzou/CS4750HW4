@@ -30,7 +30,7 @@ namespace CS4750HW4
             } //End get
         } //End private BoardVals OpponentsVal
         private Point LastMove { get; set; }
-        private Point BestMove { get; set; }
+        public int NodesGenerated { get; private set; }
 
         /***************CONSTRUCTOR***************/
         public Advanced(BoardVals _PlayersVal)
@@ -38,6 +38,7 @@ namespace CS4750HW4
             this.PlayersVal = _PlayersVal;
             this.Board = new GameBoard();
             this.LastMove = new Point(-1, -1);
+            this.NodesGenerated = 0;
         } //End public Advanced(BoardVals _PlayersVal)
 
         /***************METHODS***************/
@@ -45,10 +46,12 @@ namespace CS4750HW4
         {
             //Declare variables
 
+            this.NodesGenerated = 0;
+
             maxValue(new GameBoard(this.Board.getGameBoard()), 2, this.PlayersVal);
 
             return this.LastMove;
-        } //End 
+        } //End public Point minimaxDecision()
 
         private int maxValue(GameBoard curState, int maxPly, BoardVals curPlayerVal)
         {
@@ -74,7 +77,7 @@ namespace CS4750HW4
 
                 if (nextState.setState(possibleMoves[i], curPlayerVal))
                 {
-                    //this.LastMove = move;
+                    this.NodesGenerated += 1;
                     possibleHeuristicVal = minValue(nextState, maxPly - 1, curState.oppositeVal(curPlayerVal));
 
                     if (possibleHeuristicVal > heuristicVal)
@@ -82,10 +85,6 @@ namespace CS4750HW4
                         heuristicVal = possibleHeuristicVal;
                         this.LastMove = move;
                     } //End if (possibleHeuristicVal > heuristicVal)
-                    else
-                    {
-
-                    } //End 
                 } //End if (nextState.setState(possibleMoves[i], curPlayerVal))
                 else
                 {
@@ -121,7 +120,7 @@ namespace CS4750HW4
 
                 if (nextState.setState(possibleMoves[i], curPlayerVal))
                 {
-                    //this.LastMove = move;
+                    this.NodesGenerated += 1;
                     possibleHeuristicVal = maxValue(nextState, maxPly - 1, curState.oppositeVal(curPlayerVal));
 
                     if (possibleHeuristicVal < heuristicVal)
@@ -138,7 +137,7 @@ namespace CS4750HW4
             } //End for (int i = 0; i < possibleMoves.Count; i++)
 
             return heuristicVal;
-        } //End 
+        } //End private int minValue(GameBoard curState, int maxPly, BoardVals curPlayerVal)
 
     } //End class Advanced
 } //End namespace CS4750
