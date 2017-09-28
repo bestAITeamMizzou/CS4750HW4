@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -30,19 +31,11 @@ namespace CS4750HW4
         DownRight = 7
     } //End public enum BoardDirection
 
-    public enum Difficulty
-    {
-        NULL = -1,
-        Beginner = 0,
-        Advanced = 1,
-        Master = 2
-    } //End public enum Difficulty
-
     public partial class Form1 : Form
     {
         /***************ATTRIBUTES***************/
         //Fields
-
+        private Stopwatch timer;
 
         //Properties
         private GameBoard Board { get; set; }
@@ -70,6 +63,16 @@ namespace CS4750HW4
             this.rtxtDisplay.Text = data;
         } //End public void displayData(string data)
 
+        public void displayDataAppend(string data)
+        {
+            this.rtxtDisplay.Text += "\n\n" + data;
+        } //End public void displayData(string data)
+
+        public void displayMillisecondsElapsed()
+        {
+            timer.Stop();
+            this.displayDataAppend("Time elapsed: " + this.timer.ElapsedMilliseconds.ToString());
+        } //End public void displayMillisecondsElapsed()
 
         /***************EVENTS***************/
         private void btnPlace_Click(object sender, EventArgs e)
@@ -117,5 +120,10 @@ namespace CS4750HW4
         {
 
         } //End private void btnTournament_Click(object sender, EventArgs e)
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+
+        } //End private void btnReset_Click(object sender, EventArgs e)
     } //End public partial class Form1 : Form
 } //End namespace CS4750HW4
