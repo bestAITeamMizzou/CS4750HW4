@@ -30,6 +30,7 @@ namespace CS4750HW4
             } //End get
         } //End private BoardVals OpponentsVal
         private Point LastMove { get; set; }
+        private Point BestMove { get; set; }
 
         /***************CONSTRUCTOR***************/
         public Advanced(BoardVals _PlayersVal)
@@ -40,22 +41,13 @@ namespace CS4750HW4
         } //End public Advanced(BoardVals _PlayersVal)
 
         /***************METHODS***************/
-        public Point advancedDecision()
+        public Point minimaxDecision()
         {
             //Declare variables
-            Point move = new Point(-1,-1);
 
+            maxValue(new GameBoard(this.Board.getGameBoard()), 2, this.PlayersVal);
 
-            return move;
-        } //End 
-
-        private Point minimaxDecision()
-        {
-            //Declare variables
-            Point move = new Point(-1, -1);
-
-
-            return move;
+            return this.LastMove;
         } //End 
 
         private int maxValue(GameBoard curState, int maxPly, BoardVals curPlayerVal)
@@ -77,16 +69,18 @@ namespace CS4750HW4
             possibleMoves = curState.getPossibleMoves();
             for (int i = 0; i < possibleMoves.Count; i++)
             {
+                move = possibleMoves[i];
                 nextState = new GameBoard(curState.getGameBoard());
 
                 if (nextState.setState(possibleMoves[i], curPlayerVal))
                 {
-                    this.LastMove = move;
+                    //this.LastMove = move;
                     possibleHeuristicVal = minValue(nextState, maxPly - 1, curState.oppositeVal(curPlayerVal));
 
                     if (possibleHeuristicVal > heuristicVal)
                     {
                         heuristicVal = possibleHeuristicVal;
+                        this.LastMove = move;
                     } //End if (possibleHeuristicVal > heuristicVal)
                     else
                     {
@@ -122,16 +116,18 @@ namespace CS4750HW4
             possibleMoves = curState.getPossibleMoves();
             for (int i = 0; i < possibleMoves.Count; i++)
             {
+                move = possibleMoves[i];
                 nextState = new GameBoard(curState.getGameBoard());
 
                 if (nextState.setState(possibleMoves[i], curPlayerVal))
                 {
-                    this.LastMove = move;
+                    //this.LastMove = move;
                     possibleHeuristicVal = maxValue(nextState, maxPly - 1, curState.oppositeVal(curPlayerVal));
 
                     if (possibleHeuristicVal < heuristicVal)
                     {
                         heuristicVal = possibleHeuristicVal;
+                        this.LastMove = move;
                     } //End if (possibleHeuristicVal < heuristicVal)
                 } //End if (nextState.setState(possibleMoves[i], curPlayerVal))
                 else

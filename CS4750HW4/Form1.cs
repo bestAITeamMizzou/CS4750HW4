@@ -46,8 +46,9 @@ namespace CS4750HW4
 
         //Properties
         private GameBoard Board { get; set; }
-        private Difficulty Difficulty { get; set; }
         private Beginner Beginner { get; set; }
+        private Advanced Advanced { get; set; }
+        private Master Master { get; set; }
 
         /***************CONSTRUCTOR***************/
         public Form1()
@@ -57,6 +58,8 @@ namespace CS4750HW4
             this.cmbColumn.SelectedIndex = 0;
             this.Board = new GameBoard();
             this.Beginner = new Beginner(BoardVals.X);
+            this.Advanced = new Advanced(BoardVals.X);
+            this.Master = new Master(BoardVals.X);
             displayData(this.Board.displayBoard());
         } //End public Form1
 
@@ -75,7 +78,8 @@ namespace CS4750HW4
             Point playerChoice = new Point(this.cmbRow.SelectedIndex, this.cmbColumn.SelectedIndex);
 
             this.Board.setState(playerChoice, BoardVals.O);
-            this.Beginner.Board.setState(playerChoice, BoardVals.O);
+            //this.Beginner.Board.setState(playerChoice, BoardVals.O);
+            this.Advanced.Board.setState(playerChoice, BoardVals.O);
             displayData(this.Board.displayBoard());
         } //End private void btnPlace_Click(object sender, EventArgs e)
 
@@ -91,12 +95,22 @@ namespace CS4750HW4
 
         private void btnAdvanced_Click(object sender, EventArgs e)
         {
+            //Declare variables
+            Point move = this.Advanced.minimaxDecision();
 
+            this.Board.setState(move, this.Advanced.PlayersVal);
+            this.Advanced.Board.setState(move, this.Advanced.PlayersVal);
+            displayData(this.Board.displayBoard());
         } //End private void btnAdvanced_Click(object sender, EventArgs e)
 
         private void btnMaster_Click(object sender, EventArgs e)
         {
+            //Declare variables
+            Point move = this.Master.minimaxDecision();
 
+            this.Board.setState(move, this.Master.PlayersVal);
+            this.Master.Board.setState(move, this.Master.PlayersVal);
+            displayData(this.Board.displayBoard());
         } //End private void btnMaster_Click(object sender, EventArgs e)
 
         private void btnTournament_Click(object sender, EventArgs e)

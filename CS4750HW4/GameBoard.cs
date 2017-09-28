@@ -20,12 +20,12 @@ namespace CS4750HW4
         public GameBoard()
         {
             initGameBoard();
-        } //End 
+        } //End public GameBoard()
 
         public GameBoard(BoardVals[,] _board)
         {
-
-        } //End 
+            initGameBoard(_board);
+        } //End public GameBoard(BoardVals[,] _board)
 
         /***************METHODS***************/
         private bool isValidSpace(Point tile)
