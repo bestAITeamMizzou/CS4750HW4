@@ -376,6 +376,296 @@ namespace CS4750HW4
 
         private void btnTournament_Click(object sender, EventArgs e)
         {
+            //Declare variables
+            TournamentResults bVa = new TournamentResults();
+            TournamentResults bVm = new TournamentResults();
+            TournamentResults aVb = new TournamentResults();
+            TournamentResults aVm = new TournamentResults();
+            TournamentResults mVb= new TournamentResults();
+            TournamentResults mVa = new TournamentResults();
+            Point move = new Point(-1, -1);
+
+            //Beginner first vs Advanced
+            for (int i = 0; i < 50; i++)
+            {
+                reset();
+                this.Beginner = new Beginner(BoardVals.O);
+                
+                while (!this.Board.findFourInARow(this.Advanced.PlayersVal) && !this.Board.findFourInARow(this.Beginner.PlayersVal) && this.Board.getPossibleMoves().Count > 0)
+                {
+                    move = this.Beginner.beginnerDecision();
+
+                    this.Board.setState(move, this.Beginner.PlayersVal);
+                    this.Beginner.Board.setState(move, this.Beginner.PlayersVal);
+                    this.Advanced.Board.setState(move, this.Beginner.PlayersVal);
+                    displayData(this.Board.displayBoard());
+
+                    if (this.Board.findFourInARow(this.Beginner.PlayersVal))
+                    {
+                        break;
+                    } //End if (this.Board.findFourInAROw(this.Beginner.PlayersVal))
+                    
+                    move = this.Advanced.minimaxDecision();
+
+                    this.Board.setState(move, this.Advanced.PlayersVal);
+                    this.Beginner.Board.setState(move, this.Advanced.PlayersVal);
+                    this.Advanced.Board.setState(move, this.Advanced.PlayersVal);
+                    displayData(this.Board.displayBoard());
+                } //End while (!this.Board.findFourInARow(this.Advanced.PlayersVal) && !this.Board.findFourInARow(this.Beginner.PlayersVal))
+
+                if (this.Board.findFourInARow(this.Advanced.PlayersVal) || this.Board.findFourInARow(this.Beginner.PlayersVal))
+                {
+                    if (this.Board.findFourInARow(this.Advanced.PlayersVal))
+                    {
+                        bVa.Losses += 1;
+                    } //End if (this.Board.findFourInARow(this.Advanced.PlayersVal))
+                    else if (this.Board.findFourInARow(this.Beginner.PlayersVal))
+                    {
+                        bVa.Wins += 1;
+                    } //End else if (this.Board.findFourInARow(this.Beginner.PlayersVal))
+                } //End if (this.Board.findFourInARow(this.Advanced.PlayersVal) || this.Board.findFourInARow(this.Beginner.PlayersVal))
+                else if (this.Board.getPossibleMoves().Count <= 0)
+                {
+                    bVa.Ties += 1;
+                } //End else if (this.Board.getPossibleMoves().Count <= 0)
+            } //End for (int i = 0; i < 50; i++)
+            //**
+            //Beginner first vs Master
+            for (int i = 0; i < 50; i++)
+            {
+                reset();
+                this.Beginner = new Beginner(BoardVals.O);
+
+                while (!this.Board.findFourInARow(this.Master.PlayersVal) && !this.Board.findFourInARow(this.Beginner.PlayersVal) && this.Board.getPossibleMoves().Count > 0)
+                {
+                    move = this.Beginner.beginnerDecision();
+
+                    this.Board.setState(move, this.Beginner.PlayersVal);
+                    this.Beginner.Board.setState(move, this.Beginner.PlayersVal);
+                    this.Master.Board.setState(move, this.Beginner.PlayersVal);
+                    displayData(this.Board.displayBoard());
+
+                    if (this.Board.findFourInARow(this.Beginner.PlayersVal))
+                    {
+                        break;
+                    } //End if (this.Board.findFourInAROw(this.Beginner.PlayersVal))
+                    
+                    move = this.Master.minimaxDecision();
+
+                    this.Board.setState(move, this.Master.PlayersVal);
+                    this.Beginner.Board.setState(move, this.Master.PlayersVal);
+                    this.Master.Board.setState(move, this.Master.PlayersVal);
+                    displayData(this.Board.displayBoard());
+                } //End while (!this.Board.findFourInARow(this.Advanced.PlayersVal) && !this.Board.findFourInARow(this.Beginner.PlayersVal))
+
+                if (this.Board.findFourInARow(this.Master.PlayersVal) || this.Board.findFourInARow(this.Beginner.PlayersVal))
+                {
+                    if (this.Board.findFourInARow(this.Master.PlayersVal))
+                    {
+                        bVm.Losses += 1;
+                    } //End if (this.Board.findFourInARow(this.Advanced.PlayersVal))
+                    else if (this.Board.findFourInARow(this.Beginner.PlayersVal))
+                    {
+                        bVm.Wins += 1;
+                    } //End else if (this.Board.findFourInARow(this.Beginner.PlayersVal))
+                } //End if (this.Board.findFourInARow(this.Advanced.PlayersVal) || this.Board.findFourInARow(this.Beginner.PlayersVal))
+                else if (this.Board.getPossibleMoves().Count <= 0)
+                {
+                    bVm.Ties += 1;
+                } //End else if (this.Board.getPossibleMoves().Count <= 0)
+            } //End for (int i = 0; i < 50; i++)
+            //*/
+            //Advanced first vs Beginner
+            for (int i = 0; i < 50; i++)
+            {
+                reset();
+                this.Advanced = new Advanced(BoardVals.O);
+
+                while (!this.Board.findFourInARow(this.Advanced.PlayersVal) && !this.Board.findFourInARow(this.Beginner.PlayersVal) && this.Board.getPossibleMoves().Count > 0)
+                {
+                    move = this.Advanced.minimaxDecision();
+
+                    this.Board.setState(move, this.Advanced.PlayersVal);
+                    this.Advanced.Board.setState(move, this.Advanced.PlayersVal);
+                    this.Beginner.Board.setState(move, this.Advanced.PlayersVal);
+                    displayData(this.Board.displayBoard());
+
+                    if (this.Board.findFourInARow(this.Advanced.PlayersVal))
+                    {
+                        break;
+                    } //End if (this.Board.findFourInAROw(this.Beginner.PlayersVal))
+
+                    move = this.Beginner.beginnerDecision();
+
+                    this.Board.setState(move, this.Beginner.PlayersVal);
+                    this.Advanced.Board.setState(move, this.Beginner.PlayersVal);
+                    this.Beginner.Board.setState(move, this.Beginner.PlayersVal);
+                    displayData(this.Board.displayBoard());
+                } //End while (!this.Board.findFourInARow(this.Advanced.PlayersVal) && !this.Board.findFourInARow(this.Beginner.PlayersVal))
+
+                if (this.Board.findFourInARow(this.Beginner.PlayersVal) || this.Board.findFourInARow(this.Advanced.PlayersVal))
+                {
+                    if (this.Board.findFourInARow(this.Beginner.PlayersVal))
+                    {
+                        aVb.Losses += 1;
+                    } //End if (this.Board.findFourInARow(this.Advanced.PlayersVal))
+                    else if (this.Board.findFourInARow(this.Advanced.PlayersVal))
+                    {
+                        aVb.Wins += 1;
+                    } //End else if (this.Board.findFourInARow(this.Beginner.PlayersVal))
+                } //End if (this.Board.findFourInARow(this.Advanced.PlayersVal) || this.Board.findFourInARow(this.Beginner.PlayersVal))
+                else if (this.Board.getPossibleMoves().Count <= 0)
+                {
+                    aVb.Ties += 1;
+                } //End else if (this.Board.getPossibleMoves().Count <= 0)
+            } //End for (int i = 0; i < 50; i++)
+
+            /**
+            //Advanced first vs Master
+            for (int i = 0; i < 50; i++)
+            {
+                reset();
+                this.Advanced = new Advanced(BoardVals.O);
+
+                while (!this.Board.findFourInARow(this.Advanced.PlayersVal) && !this.Board.findFourInARow(this.Master.PlayersVal) && this.Board.getPossibleMoves().Count > 0)
+                {
+                    move = this.Advanced.minimaxDecision();
+
+                    this.Board.setState(move, this.Advanced.PlayersVal);
+                    this.Advanced.Board.setState(move, this.Advanced.PlayersVal);
+                    this.Master.Board.setState(move, this.Advanced.PlayersVal);
+                    displayData(this.Board.displayBoard());
+
+                    if (this.Board.findFourInARow(this.Advanced.PlayersVal))
+                    {
+                        break;
+                    } //End if (this.Board.findFourInAROw(this.Beginner.PlayersVal))
+
+                    move = this.Master.minimaxDecision();
+
+                    this.Board.setState(move, this.Master.PlayersVal);
+                    this.Advanced.Board.setState(move, this.Master.PlayersVal);
+                    this.Master.Board.setState(move, this.Master.PlayersVal);
+                    displayData(this.Board.displayBoard());
+                } //End while (!this.Board.findFourInARow(this.Advanced.PlayersVal) && !this.Board.findFourInARow(this.Beginner.PlayersVal))
+
+                if (this.Board.findFourInARow(this.Master.PlayersVal) || this.Board.findFourInARow(this.Advanced.PlayersVal))
+                {
+                    if (this.Board.findFourInARow(this.Master.PlayersVal))
+                    {
+                        aVm.Losses += 1;
+                    } //End if (this.Board.findFourInARow(this.Advanced.PlayersVal))
+                    else if (this.Board.findFourInARow(this.Advanced.PlayersVal))
+                    {
+                        aVm.Wins += 1;
+                    } //End else if (this.Board.findFourInARow(this.Beginner.PlayersVal))
+                } //End if (this.Board.findFourInARow(this.Advanced.PlayersVal) || this.Board.findFourInARow(this.Beginner.PlayersVal))
+                else if (this.Board.getPossibleMoves().Count <= 0)
+                {
+                    aVm.Ties += 1;
+                } //End else if (this.Board.getPossibleMoves().Count <= 0)
+            } //End for (int i = 0; i < 50; i++)
+            //*/
+            /**
+            //Master first vs Beginner
+            for (int i = 0; i < 50; i++)
+            {
+                reset();
+                this.Master = new Master(BoardVals.O);
+
+                while (!this.Board.findFourInARow(this.Master.PlayersVal) && !this.Board.findFourInARow(this.Beginner.PlayersVal) && this.Board.getPossibleMoves().Count > 0)
+                {
+                    move = this.Master.minimaxDecision();
+
+                    this.Board.setState(move, this.Master.PlayersVal);
+                    this.Master.Board.setState(move, this.Master.PlayersVal);
+                    this.Beginner.Board.setState(move, this.Master.PlayersVal);
+                    displayData(this.Board.displayBoard());
+
+                    if (this.Board.findFourInARow(this.Master.PlayersVal))
+                    {
+                        break;
+                    } //End if (this.Board.findFourInAROw(this.Beginner.PlayersVal))
+
+                    move = this.Beginner.beginnerDecision();
+
+                    this.Board.setState(move, this.Beginner.PlayersVal);
+                    this.Master.Board.setState(move, this.Beginner.PlayersVal);
+                    this.Beginner.Board.setState(move, this.Beginner.PlayersVal);
+                    displayData(this.Board.displayBoard());
+                } //End while (!this.Board.findFourInARow(this.Advanced.PlayersVal) && !this.Board.findFourInARow(this.Beginner.PlayersVal))
+
+                if (this.Board.findFourInARow(this.Beginner.PlayersVal) || this.Board.findFourInARow(this.Master.PlayersVal))
+                {
+                    if (this.Board.findFourInARow(this.Beginner.PlayersVal))
+                    {
+                        mVb.Losses += 1;
+                    } //End if (this.Board.findFourInARow(this.Advanced.PlayersVal))
+                    else if (this.Board.findFourInARow(this.Master.PlayersVal))
+                    {
+                        mVb.Wins += 1;
+                    } //End else if (this.Board.findFourInARow(this.Beginner.PlayersVal))
+                } //End if (this.Board.findFourInARow(this.Advanced.PlayersVal) || this.Board.findFourInARow(this.Beginner.PlayersVal))
+                else if (this.Board.getPossibleMoves().Count <= 0)
+                {
+                    mVb.Ties += 1;
+                } //End else if (this.Board.getPossibleMoves().Count <= 0)
+            } //End for (int i = 0; i < 50; i++)
+            //*/
+            /**
+            //Master first vs Advanced
+            for (int i = 0; i < 50; i++)
+            {
+                reset();
+                this.Master = new Master(BoardVals.O);
+
+                while (!this.Board.findFourInARow(this.Master.PlayersVal) && !this.Board.findFourInARow(this.Advanced.PlayersVal) && this.Board.getPossibleMoves().Count > 0)
+                {
+                    move = this.Master.minimaxDecision();
+
+                    this.Board.setState(move, this.Master.PlayersVal);
+                    this.Master.Board.setState(move, this.Master.PlayersVal);
+                    this.Advanced.Board.setState(move, this.Master.PlayersVal);
+                    displayData(this.Board.displayBoard());
+
+                    if (this.Board.findFourInARow(this.Master.PlayersVal))
+                    {
+                        break;
+                    } //End if (this.Board.findFourInAROw(this.Beginner.PlayersVal))
+
+                    move = this.Advanced.minimaxDecision();
+
+                    this.Board.setState(move, this.Advanced.PlayersVal);
+                    this.Master.Board.setState(move, this.Advanced.PlayersVal);
+                    this.Advanced.Board.setState(move, this.Advanced.PlayersVal);
+                    displayData(this.Board.displayBoard());
+                } //End while (!this.Board.findFourInARow(this.Advanced.PlayersVal) && !this.Board.findFourInARow(this.Beginner.PlayersVal))
+
+                if (this.Board.findFourInARow(this.Master.PlayersVal) || this.Board.findFourInARow(this.Advanced.PlayersVal))
+                {
+                    if (this.Board.findFourInARow(this.Advanced.PlayersVal))
+                    {
+                        mVa.Losses += 1;
+                    } //End if (this.Board.findFourInARow(this.Advanced.PlayersVal))
+                    else if (this.Board.findFourInARow(this.Master.PlayersVal))
+                    {
+                        mVa.Wins += 1;
+                    } //End else if (this.Board.findFourInARow(this.Beginner.PlayersVal))
+                } //End if (this.Board.findFourInARow(this.Advanced.PlayersVal) || this.Board.findFourInARow(this.Beginner.PlayersVal))
+                else if (this.Board.getPossibleMoves().Count <= 0)
+                {
+                    mVa.Ties += 1;
+                } //End else if (this.Board.getPossibleMoves().Count <= 0)
+            } //End for (int i = 0; i < 50; i++)
+            //*/
+            displayData(
+                "\n\nB vs A: \n\tWins - " + bVa.Wins + "\n\tLosses - " + bVa.Losses + "\n\tTies - " + bVa.Ties +
+                "\n\nB vs M: \n\tWins - " + bVm.Wins + "\n\tLosses - " + bVm.Losses + "\n\tTies - " + bVm.Ties +
+                "\n\nA vs B: \n\tWins - " + aVb.Wins + "\n\tLosses - " + aVb.Losses + "\n\tTies - " + aVb.Ties +
+                "\n\nA vs M: \n\tWins - " + aVm.Wins + "\n\tLosses - " + aVm.Losses + "\n\tTies - " + aVm.Ties +
+                "\n\nM vs B: \n\tWins - " + mVb.Wins + "\n\tLosses - " + mVb.Losses + "\n\tTies - " + mVb.Ties +
+                "\n\nM vs A: \n\tWins - " + mVa.Wins + "\n\tLosses - " + mVa.Losses + "\n\tTies - " + mVa.Ties
+                );
 
         } //End private void btnTournament_Click(object sender, EventArgs e)
 
