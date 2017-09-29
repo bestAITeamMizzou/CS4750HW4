@@ -15,7 +15,7 @@ namespace CS4750HW4
         //Properties
         public GameBoard Board { get; private set; }
         public BoardVals PlayersVal { get; private set; }
-        private BoardVals OpponentsVal
+        public BoardVals OpponentsVal
         {
             get
             {
@@ -30,6 +30,8 @@ namespace CS4750HW4
             } //End get
         } //End private BoardVals OpponentsVal
         private Point LastMove { get; set; }
+        private int LifeOfLastMove { get; set; }
+        private List<Point> PossibleMoves { get; set; }
         public int NodesGenerated { get; private set; }
 
         /***************CONSTRUCTOR***************/
@@ -38,6 +40,8 @@ namespace CS4750HW4
             this.PlayersVal = _PlayersVal;
             this.Board = new GameBoard();
             this.LastMove = new Point(-1, -1);
+            this.LifeOfLastMove = 1;
+            this.PossibleMoves = new List<Point>();
             this.NodesGenerated = 0;
         } //End public Advanced(BoardVals _PlayersVal)
 
@@ -84,16 +88,35 @@ namespace CS4750HW4
                     {
                         heuristicVal = possibleHeuristicVal;
                         this.LastMove = move;
+                        this.PossibleMoves.Clear();
+                        this.PossibleMoves.Add(move);
                     } //End if (possibleHeuristicVal > heuristicVal)
                     else if (possibleHeuristicVal == heuristicVal)
                     {
-                        Random rand = new Random();
+                        this.PossibleMoves.Add(move);
 
-                        if (rand.Next(0, 1) == 0)
+                        Random rand = new Random();
+                        this.LastMove = this.PossibleMoves[rand.Next(0, this.PossibleMoves.Count - 1)];
+
+                        /*
+                        bool moveChanged = false;
+
+                        for (int j = 0; j < this.LifeOfLastMove && !moveChanged; j++)
                         {
-                            this.LastMove = move;
-                        } //End if (rand.Next(0,1) == 0)
-                    } //End else if (possibleHeuristicVal == heuristicVal)
+                            if (rand.Next(0, 1 + j) != 0)
+                            {
+                                this.LastMove = move;
+                                this.LifeOfLastMove = 1;
+                                moveChanged = true;
+                            } //End if (rand.Next(0, 1 + j) != 0)
+                        } //End for (int j = 0; j < this.LifeOfLastMove && !moveChanged; j++)
+
+                        if (moveChanged)
+                        {
+                            this.LifeOfLastMove = 1;
+                        } //End if (moveChanged)
+                        //*/
+                    } //End if (nextState.setState(possibleMoves[i], curPlayerVal))
                 } //End if (nextState.setState(possibleMoves[i], curPlayerVal))
                 else
                 {
@@ -136,16 +159,35 @@ namespace CS4750HW4
                     {
                         heuristicVal = possibleHeuristicVal;
                         this.LastMove = move;
+                        this.PossibleMoves.Clear();
+                        this.PossibleMoves.Add(move);
                     } //End if (possibleHeuristicVal < heuristicVal)
                     else if (possibleHeuristicVal == heuristicVal)
                     {
-                        Random rand = new Random();
+                        this.PossibleMoves.Add(move);
 
-                        if (rand.Next(0,1) == 0)
+                        Random rand = new Random();
+                        this.LastMove = this.PossibleMoves[rand.Next(0, this.PossibleMoves.Count - 1)];
+
+                        /*
+                        bool moveChanged = false;
+
+                        for (int j = 0; j < this.LifeOfLastMove && !moveChanged; j++)
                         {
-                            this.LastMove = move;
-                        } //End if (rand.Next(0,1) == 0)
-                    } //End else if (possibleHeuristicVal == heuristicVal)
+                            if (rand.Next(0, 1 + j) != 0)
+                            {
+                                this.LastMove = move;
+                                this.LifeOfLastMove = 1;
+                                moveChanged = true;
+                            } //End if (rand.Next(0, 1 + j) != 0)
+                        } //End for (int j = 0; j < this.LifeOfLastMove && !moveChanged; j++)
+
+                        if (moveChanged)
+                        {
+                            this.LifeOfLastMove = 1;
+                        } //End if (moveChanged)
+                        //*/
+                    } //End if (nextState.setState(possibleMoves[i], curPlayerVal))
                 } //End if (nextState.setState(possibleMoves[i], curPlayerVal))
                 else
                 {

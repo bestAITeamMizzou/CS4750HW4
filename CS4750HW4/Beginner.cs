@@ -15,7 +15,7 @@ namespace CS4750HW4
         //Properties
         public GameBoard Board { get; private set; }
         public BoardVals PlayersVal { get; private set; }
-        private BoardVals OpponentsVal
+        public BoardVals OpponentsVal
         {
             get
             {

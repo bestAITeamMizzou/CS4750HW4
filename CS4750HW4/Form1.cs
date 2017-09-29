@@ -31,6 +31,14 @@ namespace CS4750HW4
         DownRight = 7
     } //End public enum BoardDirection
 
+    public enum Difficulty
+    {
+        NULL = -1,
+        Beginner = 0,
+        Advanced = 1,
+        Master = 2
+    } //End public enum Difficulty
+
     public partial class Form1 : Form
     {
         /***************ATTRIBUTES***************/
@@ -43,6 +51,7 @@ namespace CS4750HW4
         private Advanced Advanced { get; set; }
         private Master Master { get; set; }
         private BoardVals WhosTurn { get; set; }
+        private Difficulty Difficulty { get; set; }
 
         /***************CONSTRUCTOR***************/
         public Form1()
@@ -54,6 +63,7 @@ namespace CS4750HW4
             this.Beginner = new Beginner(BoardVals.X);
             this.Advanced = new Advanced(BoardVals.X);
             this.Master = new Master(BoardVals.X);
+            this.Difficulty = Difficulty.Beginner;
             displayData(this.Board.displayBoard());
         } //End public Form1
 
@@ -90,10 +100,25 @@ namespace CS4750HW4
         {
             //Declare variables
             Point playerChoice = new Point(this.cmbRow.SelectedIndex, this.cmbColumn.SelectedIndex);
+            BoardVals playerVal = BoardVals.NULL;
 
-            this.Board.setState(playerChoice, BoardVals.O);
-            //this.Beginner.Board.setState(playerChoice, BoardVals.O);
-            this.Advanced.Board.setState(playerChoice, BoardVals.O);
+            if (this.Difficulty == Difficulty.Beginner)
+            {
+                playerVal = this.Beginner.OpponentsVal;
+            } //End if (this.Difficulty == Difficulty.Beginner)
+            else if (this.Difficulty == Difficulty.Advanced)
+            {
+                playerVal = this.Advanced.OpponentsVal;
+            } //End else if (this.Difficulty == Difficulty.Advanced)
+            else if (this.Difficulty == Difficulty.Master)
+            {
+                playerVal = this.Master.OpponentsVal;
+            } //End else if (this.Difficulty == Difficulty.Master)
+
+            this.Board.setState(playerChoice, playerVal);
+            this.Beginner.Board.setState(playerChoice, this.Advanced.OpponentsVal);
+            this.Advanced.Board.setState(playerChoice, this.Advanced.OpponentsVal);
+            this.Master.Board.setState(playerChoice, this.Master.OpponentsVal);
             displayData(this.Board.displayBoard());
         } //End private void btnPlace_Click(object sender, EventArgs e)
 
@@ -101,6 +126,8 @@ namespace CS4750HW4
         {
             //Declare variables
             Point move = this.Beginner.beginnerDecision();
+
+            this.Difficulty = Difficulty.Beginner;
 
             this.Board.setState(move, this.Beginner.PlayersVal);
             this.Beginner.Board.setState(move, this.Beginner.PlayersVal);
@@ -111,6 +138,8 @@ namespace CS4750HW4
         {
             //Declare variables
             Point move = new Point(-1, -1);
+
+            this.Difficulty = Difficulty.Advanced;
 
             if (this.chkAIOnly.Checked)
             {
@@ -177,6 +206,11 @@ namespace CS4750HW4
                         this.Advanced.Board.setState(move, this.Beginner.PlayersVal);
                         displayData(this.Board.displayBoard());
 
+                        if (this.Board.findFourInARow(this.Beginner.PlayersVal))
+                        {
+                            break;
+                        } //End if (this.Board.findFourInAROw(this.Beginner.PlayersVal))
+
                         this.timer = Stopwatch.StartNew();
                         move = this.Advanced.minimaxDecision();
                         this.timer.Stop();
@@ -222,6 +256,8 @@ namespace CS4750HW4
         {
             //Declare variables
             Point move = new Point(-1, -1);
+
+            this.Difficulty = Difficulty.Master;
 
             if (this.chkAIOnly.Checked)
             {
@@ -288,6 +324,11 @@ namespace CS4750HW4
                         this.Master.Board.setState(move, this.Advanced.PlayersVal);
                         displayData(this.Board.displayBoard());
 
+                        if (this.Board.findFourInARow(this.Advanced.PlayersVal))
+                        {
+                            break;
+                        } //End if (this.Board.findFourInAROw(this.Advanced.PlayersVal))
+
                         this.timer = Stopwatch.StartNew();
                         move = this.Master.minimaxDecision();
                         this.timer.Stop();
@@ -322,7 +363,11 @@ namespace CS4750HW4
                 move = this.Master.minimaxDecision();
 
                 this.Board.setState(move, this.Master.PlayersVal);
-                this.Master.Board.setState(move, this.Master.PlayersVal);
+                //this.Master.Board.setState(move, this.Master.PlayersVal);
+                if (!this.Master.Board.setState(move, this.Master.PlayersVal))
+                {
+                    ///wat?
+                } //End 
                 displayData(this.Board.displayBoard());
             } //End else
 
