@@ -190,7 +190,7 @@ namespace CS4750HW4
                     } //End while (!this.Board.findFourInARow(this.Advanced.PlayersVal) && !this.Board.findFourInARow(this.Beginner.PlayersVal))
                 } //End else
 
-                if (this.Board.findFourInARow(this.Advanced.PlayersVal) && !this.Board.findFourInARow(this.Beginner.PlayersVal))
+                if (this.Board.findFourInARow(this.Advanced.PlayersVal) || this.Board.findFourInARow(this.Beginner.PlayersVal))
                 {
                     if (this.Board.findFourInARow(this.Advanced.PlayersVal))
                     {
@@ -200,7 +200,7 @@ namespace CS4750HW4
                     {
                         displayDataAppend("Beginner won!");
                     } //End else if (this.Board.findFourInARow(this.Beginner.PlayersVal))
-                } //End if (this.Board.findFourInARow(this.Advanced.PlayersVal) && !this.Board.findFourInARow(this.Beginner.PlayersVal))
+                } //End if (this.Board.findFourInARow(this.Advanced.PlayersVal) || this.Board.findFourInARow(this.Beginner.PlayersVal))
                 else if (this.Board.getPossibleMoves().Count <= 0)
                 {
                     displayDataAppend("Draw!");
@@ -225,7 +225,97 @@ namespace CS4750HW4
 
             if (this.chkAIOnly.Checked)
             {
+                if (this.chkSingleTurn.Checked)
+                {
+                    if (this.Advanced.PlayersVal != BoardVals.O)
+                    {
+                        this.Advanced = new Advanced(BoardVals.O);
+                    } //End if (this.Beginner.PlayersVal != BoardVals.O)
 
+                    if (!this.Board.findFourInARow(this.Master.PlayersVal) && !this.Board.findFourInARow(this.Advanced.PlayersVal))
+                    {
+                        if (this.WhosTurn == BoardVals.O)
+                        {
+                            this.WhosTurn = BoardVals.X;
+
+                            move = this.Advanced.minimaxDecision();
+
+                            if (!this.Board.setState(move, this.Advanced.PlayersVal))
+                            {
+                                ///wat?
+                            } //End 
+                            this.Advanced.Board.setState(move, this.Advanced.PlayersVal);
+                            this.Master.Board.setState(move, this.Advanced.PlayersVal);
+                            displayData("Advanced's Turn\n\n" + this.Board.displayBoard());
+                        } //End if (this.WhosTurn == BoardVals.O)
+                        else if (this.WhosTurn == BoardVals.X)
+                        {
+                            this.WhosTurn = BoardVals.O;
+
+                            this.timer = Stopwatch.StartNew();
+                            move = this.Master.minimaxDecision();
+                            this.timer.Stop();
+
+                            if (!this.Board.setState(move, this.Master.PlayersVal))
+                            {
+                                ///wat?
+                            } //End 
+                            this.Advanced.Board.setState(move, this.Master.PlayersVal);
+                            this.Master.Board.setState(move, this.Master.PlayersVal);
+                            displayData("Master's Turn\n\n" + this.Board.displayBoard());
+                            displayDataAppend("Number of nodes generated: " + this.Master.NodesGenerated);
+                            displayMillisecondsElapsed();
+                        } //End else if (this.WhosTurn == BoardVals.X)
+                    } //End if (!this.Board.findFourInARow(this.Master.PlayersVal) && !this.Board.findFourInARow(this.Advanced.PlayersVal))
+                } //End if (this.chkSingleTurn.Checked)
+                else
+                {
+                    if (!this.chkFinishGame.Checked)
+                    {
+                        reset();
+                        this.Advanced = new Advanced(BoardVals.O);
+                    } //End if (!this.chkFinishGame.Checked)
+
+                    int turns = 0;
+                    while (!this.Board.findFourInARow(this.Master.PlayersVal) && !this.Board.findFourInARow(this.Advanced.PlayersVal) && this.Board.getPossibleMoves().Count > 0)
+                    {
+                        turns += 1;
+
+                        move = this.Advanced.minimaxDecision();
+
+                        this.Board.setState(move, this.Advanced.PlayersVal);
+                        this.Advanced.Board.setState(move, this.Advanced.PlayersVal);
+                        this.Master.Board.setState(move, this.Advanced.PlayersVal);
+                        displayData(this.Board.displayBoard());
+
+                        this.timer = Stopwatch.StartNew();
+                        move = this.Master.minimaxDecision();
+                        this.timer.Stop();
+
+                        this.Board.setState(move, this.Master.PlayersVal);
+                        this.Advanced.Board.setState(move, this.Master.PlayersVal);
+                        this.Master.Board.setState(move, this.Master.PlayersVal);
+                        displayData(this.Board.displayBoard());
+                        displayDataAppend("Number of nodes generated: " + this.Master.NodesGenerated);
+                        displayMillisecondsElapsed();
+                    } //End while (!this.Board.findFourInARow(this.Master.PlayersVal) && !this.Board.findFourInARow(this.Advanced.PlayersVal) && this.Board.getPossibleMoves().Count > 0)
+                } //End else
+
+                if (this.Board.findFourInARow(this.Master.PlayersVal) || this.Board.findFourInARow(this.Advanced.PlayersVal))
+                {
+                    if (this.Board.findFourInARow(this.Master.PlayersVal))
+                    {
+                        displayDataAppend("Master won!");
+                    } //End if (this.Board.findFourInARow(this.Master.PlayersVal))
+                    else if (this.Board.findFourInARow(this.Advanced.PlayersVal))
+                    {
+                        displayDataAppend("Advanced won!");
+                    } //End else if (this.Board.findFourInARow(this.Advanced.PlayersVal))
+                } //End if (this.Board.findFourInARow(this.Master.PlayersVal) || !this.Board.findFourInARow(this.Advanced.PlayersVal))
+                else if (this.Board.getPossibleMoves().Count <= 0)
+                {
+                    displayDataAppend("Draw!");
+                } //End else if (this.Board.getPossibleMoves().Count <= 0)
             } //End if (this.chkAIOnly.Checked)
             else
             {

@@ -86,6 +86,15 @@ namespace CS4750HW4
                         heuristicVal = possibleHeuristicVal;
                         this.LastMove = move;
                     } //End if (possibleHeuristicVal > heuristicVal)
+                    else if (possibleHeuristicVal == heuristicVal)
+                    {
+                        Random rand = new Random();
+
+                        if (rand.Next(0, 1) == 0)
+                        {
+                            this.LastMove = move;
+                        } //End if (rand.Next(0,1) == 0)
+                    } //End else if (possibleHeuristicVal == heuristicVal)
                 } //End if (nextState.setState(possibleMoves[i], curPlayerVal))
                 else
                 {
@@ -129,6 +138,15 @@ namespace CS4750HW4
                         heuristicVal = possibleHeuristicVal;
                         this.LastMove = move;
                     } //End if (possibleHeuristicVal < heuristicVal)
+                    else if (possibleHeuristicVal == heuristicVal)
+                    {
+                        Random rand = new Random();
+
+                        if (rand.Next(0, 1) == 0)
+                        {
+                            this.LastMove = move;
+                        } //End if (rand.Next(0,1) == 0)
+                    } //End else if (possibleHeuristicVal == heuristicVal)
                 } //End if (nextState.setState(possibleMoves[i], curPlayerVal))
                 else
                 {
