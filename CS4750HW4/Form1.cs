@@ -520,7 +520,7 @@ namespace CS4750HW4
                 } //End else if (this.Board.getPossibleMoves().Count <= 0)
             } //End for (int i = 0; i < 50; i++)
 
-            /**
+            //**
             //Advanced first vs Master
             for (int i = 0; i < 50; i++)
             {
@@ -566,7 +566,7 @@ namespace CS4750HW4
                 } //End else if (this.Board.getPossibleMoves().Count <= 0)
             } //End for (int i = 0; i < 50; i++)
             //*/
-            /**
+            //**
             //Master first vs Beginner
             for (int i = 0; i < 50; i++)
             {
@@ -612,7 +612,7 @@ namespace CS4750HW4
                 } //End else if (this.Board.getPossibleMoves().Count <= 0)
             } //End for (int i = 0; i < 50; i++)
             //*/
-            /**
+            //**
             //Master first vs Advanced
             for (int i = 0; i < 50; i++)
             {
