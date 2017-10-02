@@ -80,8 +80,9 @@ namespace CS4750HW4
             GameBoard b = new GameBoard();
             String[,] colorMap = new String[5, 6];
             Tuple<List<List<Point>>, List<List<Point>>> triples = b.getThreesInARow(colorMap);
-            
-            foreach(List<Point> triple in triples.Item1)
+            Tuple<List<List<Point>>, List<List<Point>>> doubles = b.getTwosInARow(colorMap);
+
+            foreach (List<Point> triple in triples.Item1)
             {
                 foreach(Point p in triple)
                 {
@@ -111,6 +112,28 @@ namespace CS4750HW4
                     {
                         System.Diagnostics.Debug.Write(colorMap[i, j]+"|");
                     }
+                }
+                System.Diagnostics.Debug.Write("\n");
+            }
+
+            System.Diagnostics.Debug.Write("\nX doubles:\n");
+
+            foreach (List<Point> pair in doubles.Item1)
+            {
+                foreach (Point p in pair)
+                {
+                    System.Diagnostics.Debug.Write(p + "|");
+                }
+                System.Diagnostics.Debug.Write("\n");
+            }
+
+            System.Diagnostics.Debug.Write("\nO doubles:\n");
+
+            foreach (List<Point> pair in doubles.Item2)
+            {
+                foreach (Point p in pair)
+                {
+                    System.Diagnostics.Debug.Write(p + "|");
                 }
                 System.Diagnostics.Debug.Write("\n");
             }

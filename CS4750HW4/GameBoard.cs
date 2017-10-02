@@ -63,10 +63,17 @@ namespace CS4750HW4
             return returnVal;
         } //End public bool isValidSpace(Point tileToConsider, BoardVals valToConsider)
 
+        /// <summary>
+        /// Determines whether two points are part of a set of three in a rows
+        /// </summary>
+        /// <param name="a">The first point to be checked</param>
+        /// <param name="b">The second point to be checked</param>
+        /// <param name="colorBoard">The data structure containing the information where three in a rows are</param>
+        /// <returns>True if the two points are a subset of a three in a row false otherwise</returns>
         public bool isTripleMembers(Point a, Point b, String[,] colorBoard)
         {
-            String x = colorBoard[a.X, a.Y];
-            String y = colorBoard[b.X, b.Y];
+            String x = (colorBoard[a.X, a.Y] == null) ? "" : colorBoard[a.X, a.Y];
+            String y = (colorBoard[b.X, b.Y] == null) ? "" : colorBoard[b.X, b.Y];
 
             foreach (char c in x)
             {
@@ -261,61 +268,131 @@ namespace CS4750HW4
         } //End private Point getPossibleNthInARow(Point tileToConsider, BoardVals valToConsider, BoardDirection direction)
         
         /// <summary>
-        /// Finds 2 tiles in the same direction with an empty space at one end
+        /// Finds 2 tiles in the same direction with at least two empty spaces on either end
         /// </summary>
-        /// <param name="valToConsider">Look at Xs or Os</param>
+        /// <param name="valToConsider">A colored map describing positions of open three in a rows</param>
         /// <returns></returns>
-        public List<List<Point>> getTwosInARow(BoardVals valToConsider)
+        public Tuple<List<List<Point>>, List<List<Point>>> getTwosInARow(String[,] coloringGraph)
         {
-            //Declare variables
-            List<List<Point>> twos = new List<List<Point>>();
-            List<Point> possible2nds = new List<Point>();
-            Point empty3rd;
+            List<List<Point>> XDoubles = new List<List<Point>>();
+            List<List<Point>> ODoubles = new List<List<Point>>();
 
-            for (int j = 0; j < 6; j++)
+            BoardVals[,] board = getGameBoard();//safety measure to not alter original board
+            int height = board.GetLength(0);
+            int width = board.GetLength(1);
+
+            for (int i = 0; i < height - 1; i++)
             {
-                for (int i = 0; i < 5; i++)
+                for (int j = 1; j < width - 1; j++)
                 {
-                    if (this.Board[i,j] == valToConsider)
+                    Point current = new Point(i, j);
+
+                    if (isEmptySpace(current))
                     {
-                        possible2nds = getValidSurroundingTiles(new Point(i,j), valToConsider);
-                        if (possible2nds.Count > 0)
-                        {
-                            for (int x = 0; x < possible2nds.Count; x++)
-                            {
-                                empty3rd = getPossibleNthInARow(possible2nds[x], BoardVals.NULL, determineDirectionT1ToT2(new Point(i, j), possible2nds[x]));
-                                if (isValidSpace(empty3rd, BoardVals.NULL))
-                                {
-                                    List<Point> temp = new List<Point>();
-                                    temp.Add(new Point(i, j));
-                                    temp.Add(possible2nds[x]);
-                                    temp.Add(empty3rd);
-                                    twos.Add(temp);
-                                } //End if (isValidSpace(empty3rd, valToConsider))
+                        continue;
+                    }
 
-                                /*
-                                List<Point> temp = new List<Point>();
-                                temp.Add(new Point(i, j));
-                                temp.Add(possible2nds[x]);
-                                twos.Add(temp);
-                                //*/
-                            } //End for (int x = 0; x < possible2nds.Count; x++)
-                        } //End if (possible2nds.Count > 0)
-                    } //End if (this.Board[i,j] == valToConsider)
-                } //End for (int i = 0; i < 5; i++)
-            } //End for (int j = 0; j < 6; j++)
+                    checkDirectionForDouble(current, 0, -1, coloringGraph, XDoubles, ODoubles, board);//check right
+                    checkDirectionForDouble(current, -1, 0, coloringGraph, XDoubles, ODoubles, board);//check down
+                    checkDirectionForDouble(current, -1, -1, coloringGraph, XDoubles, ODoubles, board);//check down right
+                    checkDirectionForDouble(current, -1, 1, coloringGraph, XDoubles, ODoubles, board);//check down left
+                }
+            }
 
-            return twos;
-        } //End public List<List<Point>> getTwosInARow(BoardVals valToConsider)
-        
-        /// <summary>
-        /// Finds 3 tiles all in the same direction with an empty space at one end
-        /// </summary>
-        /// <param name="valToConsider">Look at Xs or Os</param>
-        /// <returns>A tuple representing open 3 in a rows. The first element representing Xs and the second Os.</returns>
-        public Tuple<List<List<Point>>,List<List<Point>>> getThreesInARow(String[,] coloringGraph)
+            //Scan last row without last element
+            for (int j = 0; j < width - 1; j++)
+            {
+                Point current = new Point(height - 1, j);
+
+                if (isEmptySpace(current))
+                {
+                    continue;
+                }
+
+                checkDirectionForDouble(current, 0, -1, coloringGraph, XDoubles, ODoubles, board);//check right
+            }
+
+            Console.WriteLine();
+
+            //Scan rightmost and leftmost column without last element
+            for (int i = 0; i < height - 1; i++)
+            {
+                Point right = new Point(i, width - 1);
+                Point left = new Point(i, 0);
+
+                if (!isEmptySpace(right))
+                {
+                    checkDirectionForDouble(right, -1, 0, coloringGraph, XDoubles, ODoubles, board);//check down
+                    checkDirectionForDouble(right, -1, 1, coloringGraph, XDoubles, ODoubles, board);//check down left
+                }
+
+                if (!isEmptySpace(left))
+                {
+                    checkDirectionForDouble(left, 0, -1, coloringGraph, XDoubles, ODoubles, board);//check right
+                    checkDirectionForDouble(left, -1, 0, coloringGraph, XDoubles, ODoubles, board);//check down
+                    checkDirectionForDouble(left, -1, -1, coloringGraph, XDoubles, ODoubles, board);//check down right
+                }
+            }
+
+            return new Tuple<List<List<Point>>, List<List<Point>>>(XDoubles, ODoubles);
+        } //End public List<List<Point>> getTwosInARow(String[,] coloringGraph)
+
+        private void checkDirectionForDouble(Point center, int XOffset, int YOffset, String[,] coloringGraph, List<List<Point>> XDoubles, List<List<Point>> ODoubles, BoardVals[,] board)
         {
+            Point adjacent = new Point(center.X - XOffset, center.Y - YOffset);
+
+            if (board[center.X, center.Y] != board[adjacent.X, adjacent.Y])//2 points do not have the same value
+            {
+                return;
+            }
+
+            if (isTripleMembers(center, adjacent, coloringGraph))//2 points are part of an open 3 in a row and therefore cannot be an open 2 in a row
+            {
+                return;
+            }
+
+            bool isBehindEmpty = isEmptySpace(new Point(center.X + XOffset, center.Y + YOffset));//Is the space opposite of adjacent relative to center an empty space?
+            bool isTwoBehindEmpty = isEmptySpace(new Point(center.X + 2 * XOffset, center.Y + 2 * YOffset));//Is the space behind opposite of adjacent relative to center an empty space?
+            bool isFrontEmpty = isEmptySpace(new Point(center.X - 2 * XOffset, center.Y - 2 * YOffset));//Is the space opposite of center relative to adjacent an empty space?
+            bool isTwoFrontEmpty = isEmptySpace(new Point(center.X - 3 * XOffset, center.Y - 3 * YOffset));//Is the space past opposite of center relative to adjacent and empty space?
+
+            /* for example 
+             * # = empty space
+             * X = X
+             * O = O
+             * 
+             *        A nonexistent space is "Two Behind". It is not empty.
+             * O##### The O is "behind". It is not empty
+             * #X#### The X here is "center"
+             * ##X### The X here is "adjacent"
+             * ###### The third empty space from the right is "front". It is empty.
+             * ###### The second empty space from the right is "twoFront". It is empty.
+             * ######
+             */
             
+            //if there's space to make 4 in a row
+            if ((isBehindEmpty && isTwoBehindEmpty) || (isBehindEmpty && isFrontEmpty) || (isFrontEmpty && isTwoFrontEmpty))
+            {
+                List<Point> twoInARow = new List<Point>(){center, adjacent};
+
+                if (board[center.X, center.Y] == BoardVals.X)
+                {
+                    XDoubles.Add(twoInARow);
+                }
+                else
+                {
+                    ODoubles.Add(twoInARow);
+                }
+            }
+        }
+
+            /// <summary>
+            /// Finds 3 tiles all in the same direction with an empty space at one end
+            /// </summary>
+            /// <param name="valToConsider">Look at Xs or Os</param>
+            /// <returns>A tuple representing open 3 in a rows. The first element representing Xs and the second Os.</returns>
+            public Tuple<List<List<Point>>,List<List<Point>>> getThreesInARow(String[,] coloringGraph)
+        {
             BoardVals[,] board = getGameBoard();//safety measure to not alter original board
             int height = board.GetLength(0);
             int width = board.GetLength(1);
@@ -432,10 +509,10 @@ namespace CS4750HW4
 
             return isX ? 
                 //heuristic for X
-                threeInARows.Item1.Count * 3 - threeInARows.Item2.Count * 3 + getTwosInARow(BoardVals.X).Count - getTwosInARow(BoardVals.O).Count
+                threeInARows.Item1.Count * 3 - threeInARows.Item2.Count * 3 + getTwosInARow(colorBoard).Item1.Count - getTwosInARow(colorBoard).Item2.Count
             :
                 //heuristic for O
-                threeInARows.Item2.Count * 3 - threeInARows.Item1.Count * 3 + getTwosInARow(BoardVals.O).Count - getTwosInARow(BoardVals.X).Count;
+                threeInARows.Item2.Count * 3 - threeInARows.Item1.Count * 3 + getTwosInARow(colorBoard).Item2.Count - getTwosInARow(colorBoard).Item1.Count;
         }
         
         /// <summary>
@@ -502,23 +579,23 @@ namespace CS4750HW4
         } //End private BoardDirection determineDirectionT1ToT2(Point tile1, Point tile2)
         private void initGameBoard()
         {
-            /*this.Board = new BoardVals[5, 6]{{BoardVals.NULL,    BoardVals.O, BoardVals.NULL, BoardVals.NULL,    BoardVals.O, BoardVals.NULL},
+            this.Board = new BoardVals[5, 6]{{BoardVals.NULL,    BoardVals.O, BoardVals.NULL, BoardVals.NULL,    BoardVals.O, BoardVals.NULL},
                                              {BoardVals.NULL,    BoardVals.X,    BoardVals.O,    BoardVals.O, BoardVals.NULL, BoardVals.NULL},
                                              {BoardVals.NULL,    BoardVals.X,    BoardVals.O,    BoardVals.X,    BoardVals.X, BoardVals.NULL},
                                              {BoardVals.NULL,    BoardVals.X, BoardVals.NULL,    BoardVals.O, BoardVals.NULL, BoardVals.NULL},
                                              {BoardVals.NULL, BoardVals.NULL, BoardVals.NULL, BoardVals.NULL, BoardVals.NULL, BoardVals.NULL}};
             
-            this.Board = new BoardVals[5, 6]{{BoardVals.NULL, BoardVals.NULL, BoardVals.NULL, BoardVals.NULL, BoardVals.NULL,    BoardVals.X},
+            /*this.Board = new BoardVals[5, 6]{{BoardVals.NULL, BoardVals.NULL, BoardVals.NULL, BoardVals.NULL, BoardVals.NULL,    BoardVals.X},
                                              {BoardVals.NULL, BoardVals.NULL,    BoardVals.X, BoardVals.NULL,    BoardVals.X,    BoardVals.O},
                                              {BoardVals.NULL, BoardVals.NULL, BoardVals.NULL,    BoardVals.X,    BoardVals.O, BoardVals.NULL},
                                              {BoardVals.NULL,    BoardVals.O,    BoardVals.O,    BoardVals.O,    BoardVals.X, BoardVals.NULL},
                                              {BoardVals.NULL, BoardVals.NULL,    BoardVals.X, BoardVals.NULL, BoardVals.NULL,    BoardVals.O}};*/
 
-            this.Board = new BoardVals[5, 6]{{BoardVals.NULL, BoardVals.NULL, BoardVals.NULL, BoardVals.NULL, BoardVals.NULL, BoardVals.NULL},
+            /*this.Board = new BoardVals[5, 6]{{BoardVals.NULL, BoardVals.NULL, BoardVals.NULL, BoardVals.NULL, BoardVals.NULL, BoardVals.NULL},
                                              {   BoardVals.X, BoardVals.NULL,    BoardVals.O,    BoardVals.O, BoardVals.NULL, BoardVals.NULL},
                                              {   BoardVals.X, BoardVals.NULL, BoardVals.NULL,    BoardVals.O, BoardVals.NULL, BoardVals.NULL},
                                              {   BoardVals.X, BoardVals.NULL, BoardVals.NULL,    BoardVals.O,    BoardVals.O, BoardVals.NULL},
-                                             {BoardVals.NULL, BoardVals.NULL,    BoardVals.X,    BoardVals.X,    BoardVals.X, BoardVals.NULL}};
+                                             {BoardVals.NULL, BoardVals.NULL,    BoardVals.X,    BoardVals.X,    BoardVals.X, BoardVals.NULL}};*/
             
             /*this.Board = new BoardVals[5, 6];
 
