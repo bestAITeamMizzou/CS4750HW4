@@ -69,7 +69,16 @@ namespace CS4750HW4
             if (maxPly <= 0)
             {
                 //Return utility(state)
-                return heuristicVal = curState.getHeuristicVal(curPlayerVal);
+                if (this.Board.findFourInARow(this.PlayersVal))
+                {
+                    heuristicVal = int.MaxValue;
+                } //End if (this.Board.findFourInARow(this.PlayersVal))
+                else
+                {
+                    heuristicVal = curState.getHeuristicVal(curPlayerVal);
+                } //End else 
+
+                return heuristicVal;
             } //End if (maxPly <= 0)
 
             //Get the possible moves
@@ -97,25 +106,6 @@ namespace CS4750HW4
 
                         Random rand = new Random();
                         this.LastMove = this.PossibleMoves[rand.Next(0, this.PossibleMoves.Count - 1)];
-
-                        /*
-                        bool moveChanged = false;
-
-                        for (int j = 0; j < this.LifeOfLastMove && !moveChanged; j++)
-                        {
-                            if (rand.Next(0, 1 + j) != 0)
-                            {
-                                this.LastMove = move;
-                                this.LifeOfLastMove = 1;
-                                moveChanged = true;
-                            } //End if (rand.Next(0, 1 + j) != 0)
-                        } //End for (int j = 0; j < this.LifeOfLastMove && !moveChanged; j++)
-
-                        if (moveChanged)
-                        {
-                            this.LifeOfLastMove = 1;
-                        } //End if (moveChanged)
-                        //*/
                     } //End if (nextState.setState(possibleMoves[i], curPlayerVal))
                 } //End if (nextState.setState(possibleMoves[i], curPlayerVal))
                 else
@@ -140,7 +130,16 @@ namespace CS4750HW4
             if (maxPly <= 0)
             {
                 //Return utility(state)
-                return heuristicVal = curState.getHeuristicVal(curPlayerVal);
+                if (this.Board.findFourInARow(this.OpponentsVal))
+                {
+                    heuristicVal = int.MinValue;
+                } //End if (this.Board.findFourInARow(this.PlayersVal))
+                else
+                {
+                    heuristicVal = curState.getHeuristicVal(curPlayerVal);
+                } //End else 
+
+                return heuristicVal;
             } //End if (maxPly <= 0)
 
             //Get the possible moves
@@ -168,25 +167,6 @@ namespace CS4750HW4
 
                         Random rand = new Random();
                         this.LastMove = this.PossibleMoves[rand.Next(0, this.PossibleMoves.Count - 1)];
-
-                        /*
-                        bool moveChanged = false;
-
-                        for (int j = 0; j < this.LifeOfLastMove && !moveChanged; j++)
-                        {
-                            if (rand.Next(0, 1 + j) != 0)
-                            {
-                                this.LastMove = move;
-                                this.LifeOfLastMove = 1;
-                                moveChanged = true;
-                            } //End if (rand.Next(0, 1 + j) != 0)
-                        } //End for (int j = 0; j < this.LifeOfLastMove && !moveChanged; j++)
-
-                        if (moveChanged)
-                        {
-                            this.LifeOfLastMove = 1;
-                        } //End if (moveChanged)
-                        //*/
                     } //End if (nextState.setState(possibleMoves[i], curPlayerVal))
                 } //End if (nextState.setState(possibleMoves[i], curPlayerVal))
                 else
