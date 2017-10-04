@@ -47,9 +47,9 @@ namespace CS4750HW4
             Random randMove = new Random();
             bool skipRand = false;
 
-            this.Board.findFourInARow(OpponentsVal);
+            //this.Board.findFourInARow(OpponentsVal);
 
-            threesInARow = this.Board.getThreesInARow(OpponentsVal);
+            threesInARow = this.Board.getThreesInARow(this.PlayersVal);
             if (threesInARow.Count > 0)
             {
                 for (int x = 0; x < threesInARow[0].Count; x++)
@@ -71,6 +71,28 @@ namespace CS4750HW4
                 } //End for (int x = 0; x < threesInARow[0].Count; x++)
             } //End if (threesInARow.Count > 0)
 
+            threesInARow = this.Board.getThreesInARow(this.OpponentsVal);
+            if (threesInARow.Count > 0 && !skipRand)
+            {
+                for (int x = 0; x < threesInARow[0].Count; x++)
+                {
+                    if (this.Board.isValidSpace(threesInARow[0][x], BoardVals.NULL))
+                    {
+                        if (this.Board.setState(threesInARow[0][x], this.PlayersVal))
+                        {
+                            move = threesInARow[0][x];
+                            skipRand = true;
+                            break;
+                        } //End if (this.Board.setState(threesInARow[0][x], this.PlayersVal))
+                        else
+                        {
+                            ///How did this happen?
+                            ///Pretty sure it shouldn't be possible to reach here
+                        } //End else
+                    } //End if (this.Board.isValidSpace(threesInARow[0][x], BoardVals.NULL))
+                } //End for (int x = 0; x < threesInARow[0].Count; x++)
+            } //End if (threesInARow.Count > 0 && !skipRand)
+
             if (!skipRand)
             {
                 possibleMoves = this.Board.getPossibleMoves();
@@ -85,9 +107,7 @@ namespace CS4750HW4
                 } //End if (possibleMoves.Count > 0)
             } //End (!skipRand)
 
-
             return move;
-        } //End 
-
+        } //End public Point beginnerDecision()
     } //End class Beginner
 } //End namespace CS4750
