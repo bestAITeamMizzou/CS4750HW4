@@ -42,24 +42,23 @@ namespace CS4750HW4
         {
             //Declare variables
             Point move = new Point (-1,-1);
-            List<List<Point>> threesInARow = new List<List<Point>>();
+            Tuple<List<List<Point>>, List<List<Point>>> triples = this.Board.getThreesInARow(new String[5, 6]);
+            List<List<Point>> playerTriples = (this.PlayersVal == BoardVals.X) ? triples.Item1 : triples.Item2;
+            List<List<Point>> adversaryTriples = (this.OpponentsVal == BoardVals.X) ? triples.Item1 : triples.Item2;
             List<Point> possibleMoves = new List<Point>();
             Random randMove = new Random();
-            bool skipRand = false;
 
             //this.Board.findFourInARow(OpponentsVal);
-
-            threesInARow = this.Board.getThreesInARow(this.PlayersVal);
-            if (threesInARow.Count > 0)
+            
+            if (playerTriples.Count > 0)//make move to win the game
             {
-                for (int x = 0; x < threesInARow[0].Count; x++)
+                for (int x = 0; x < playerTriples[0].Count; x++)
                 {
-                    if (this.Board.isValidSpace(threesInARow[0][x], BoardVals.NULL))
+                    if (this.Board.isValidSpace(playerTriples[0][x], BoardVals.NULL))
                     {
-                        if (this.Board.setState(threesInARow[0][x], this.PlayersVal))
+                        if (this.Board.setState(playerTriples[0][x], this.PlayersVal))
                         {
-                            move = threesInARow[0][x];
-                            skipRand = true;
+                            move = playerTriples[0][x];
                             break;
                         } //End if (this.Board.setState(threesInARow[0][x], this.PlayersVal))
                         else
@@ -70,18 +69,15 @@ namespace CS4750HW4
                     } //End if (this.Board.isValidSpace(threesInARow[0][x], BoardVals.NULL))
                 } //End for (int x = 0; x < threesInARow[0].Count; x++)
             } //End if (threesInARow.Count > 0)
-
-            threesInARow = this.Board.getThreesInARow(this.OpponentsVal);
-            if (threesInARow.Count > 0 && !skipRand)
+            else if (adversaryTriples.Count > 0)//make move to prevent game from being won next round
             {
-                for (int x = 0; x < threesInARow[0].Count; x++)
+                for (int x = 0; x < adversaryTriples[0].Count; x++)
                 {
-                    if (this.Board.isValidSpace(threesInARow[0][x], BoardVals.NULL))
+                    if (this.Board.isValidSpace(adversaryTriples[0][x], BoardVals.NULL))
                     {
-                        if (this.Board.setState(threesInARow[0][x], this.PlayersVal))
+                        if (this.Board.setState(adversaryTriples[0][x], this.PlayersVal))
                         {
-                            move = threesInARow[0][x];
-                            skipRand = true;
+                            move = adversaryTriples[0][x];
                             break;
                         } //End if (this.Board.setState(threesInARow[0][x], this.PlayersVal))
                         else
@@ -92,20 +88,16 @@ namespace CS4750HW4
                     } //End if (this.Board.isValidSpace(threesInARow[0][x], BoardVals.NULL))
                 } //End for (int x = 0; x < threesInARow[0].Count; x++)
             } //End if (threesInARow.Count > 0 && !skipRand)
-
-            if (!skipRand)
+            else//make a random move
             {
                 possibleMoves = this.Board.getPossibleMoves();
-                if (possibleMoves.Count > 0)
+                move = possibleMoves[randMove.Next(0, possibleMoves.Count - 1)];
+
+                while (!this.Board.isValidSpace(move, BoardVals.NULL))
                 {
                     move = possibleMoves[randMove.Next(0, possibleMoves.Count - 1)];
-
-                    while (!this.Board.isValidSpace(move, BoardVals.NULL))
-                    {
-                        move = possibleMoves[randMove.Next(0, possibleMoves.Count - 1)];
-                    } //End while (!this.Board.isValidSpace(move, BoardVals.NULL))
-                } //End if (possibleMoves.Count > 0)
-            } //End (!skipRand)
+                } //End while (!this.Board.isValidSpace(move, BoardVals.NULL))
+            } //End if (possibleMoves.Count > 0)
 
             return move;
         } //End public Point beginnerDecision()
